@@ -1,0 +1,596 @@
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 10px;
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+a {
+  text-decoration: underline;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.columns {
+  position: static;
+  margin: 100px 40px;
+  border-style: none;
+  border-width: 1px;
+  border-color: #000;
+}
+
+.tracklist {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-family: 'Orator std font', 'Times New Roman', sans-serif;
+  color: #fff;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.column-2 {
+  border: 1px none #000;
+}
+
+.column-1 {
+  margin-top: 0px;
+  padding-left: 0px;
+  clear: none;
+  border: 1px none #000;
+}
+
+.heading {
+  padding-top: 0px;
+  font-family: 'Libre Franklin', sans-serif;
+  color: #fff;
+  font-size: 72px;
+  line-height: 80px;
+  font-weight: 400;
+}
+
+.heading.about {
+  color: #1f1d1d;
+}
+
+.heading.password {
+  width: 100%;
+  color: #1f1d1d;
+  font-size: 48px;
+  font-weight: 400;
+}
+
+.header-main {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: #fff;
+}
+
+.copyright {
+  font-family: 'Orator std font', 'Times New Roman', sans-serif;
+  color: #fff;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.body-main {
+  display: block;
+  overflow: hidden;
+  max-height: 100%;
+  max-width: 100%;
+  background-color: rgba(134, 173, 212, 0.84);
+  background-image: url('../images/background.png');
+  background-position: 50% 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: 'Libre Franklin', sans-serif;
+  color: #1f1d1d;
+  font-size: 18px;
+  line-height: 22px;
+  -o-object-fit: none;
+  object-fit: none;
+}
+
+.body {
+  background-color: #fff;
+}
+
+.header-about {
+  font-family: 'Libre Franklin', sans-serif;
+  color: #1f1d1d;
+  font-weight: 500;
+}
+
+.heading-2 {
+  margin-top: 10px;
+  font-family: 'Orator std font', 'Times New Roman', sans-serif;
+  font-size: 22px;
+  line-height: 26px;
+  font-weight: 400;
+  letter-spacing: 0.12rem;
+  text-indent: 0px;
+  text-transform: uppercase;
+}
+
+.paragraph {
+  margin-bottom: 0px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  color: #1f1d1d;
+}
+
+.paragraph.about {
+  margin-right: 40px;
+}
+
+.paragraph._404 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.image {
+  position: static;
+  left: auto;
+  display: block;
+  margin: 0px auto;
+  text-align: left;
+}
+
+.image.self {
+  margin-top: 140px;
+}
+
+.link-about:hover {
+  background-color: #fdff84;
+}
+
+.link-home {
+  color: #fff;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+
+.link-home:hover {
+  background-color: #fdff84;
+  color: #1f1d1d;
+}
+
+.utility-page-wrap {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100%;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.utility-page-content {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  margin: auto;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  text-align: center;
+}
+
+.utility-page-form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  background-color: #1f1d1d;
+  font-family: 'Libre Franklin', sans-serif;
+}
+
+.submit-button:hover {
+  border: 1px solid #000;
+  background-color: #fff;
+  color: #1f1d1d;
+}
+
+.link-2 {
+  font-family: 'Orator std font', 'Times New Roman', sans-serif;
+  color: #1f1d1d;
+  font-size: 22px;
+  text-decoration: none;
+}
+
+.link-2:hover {
+  background-color: #fdff84;
+}
+
+.text-field {
+  max-width: 100%;
+}
+
+.error-message {
+  overflow: visible;
+}
+
+.button {
+  display: block;
+  width: 24%;
+  margin-right: auto;
+  margin-left: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 auto;
+  -ms-flex: 0 auto;
+  flex: 0 auto;
+  border: 1px solid #000;
+  background-color: #fff;
+  font-family: 'Libre Franklin', sans-serif;
+  color: #1f1d1d;
+}
+
+.button.back {
+  width: auto;
+  margin-top: 8px;
+}
+
+.button.back:hover {
+  background-color: #fdff84;
+}
+
+.div-block {
+  max-width: 24%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.image-2 {
+  max-width: 24%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.field-label {
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.image-3 {
+  max-width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.body-404 {
+  overflow: hidden;
+}
+
+.text-block {
+  overflow: visible;
+  text-transform: lowercase;
+}
+
+@media screen and (min-width: 1440px) {
+  a:hover {
+    background-color: #fdff84;
+    color: #1f1d1d;
+    text-decoration: none;
+  }
+
+  label {
+    font-family: 'Libre Franklin', sans-serif;
+    color: #1f1d1d;
+    font-size: 18px;
+  }
+
+  .columns {
+    border-style: none;
+  }
+
+  .column-2 {
+    border-style: none;
+  }
+
+  .column-1 {
+    border-style: none;
+  }
+
+  .heading {
+    font-weight: 400;
+  }
+
+  .heading.password {
+    display: block;
+    width: 100%;
+    color: #1f1d1d;
+    font-size: 64px;
+  }
+
+  .copyright {
+    text-transform: lowercase;
+  }
+
+  .body {
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .body.password {
+    background-color: #fffef8;
+  }
+
+  .heading-2 {
+    letter-spacing: 0.06rem;
+  }
+
+  .paragraph {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .paragraph.about {
+    padding-right: 6px;
+  }
+
+  .paragraph._404 {
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 18px;
+    line-height: 26px;
+  }
+
+  .paragraph.password {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .link-about {
+    background-color: transparent;
+  }
+
+  .link-about:hover {
+    background-color: #fdff84;
+  }
+
+  .list-item {
+    text-decoration: none;
+  }
+
+  .link-home {
+    color: #fff;
+    text-decoration: none;
+    text-transform: lowercase;
+  }
+
+  .utility-page-wrap {
+    width: auto;
+    -o-object-fit: fill;
+    object-fit: fill;
+  }
+
+  .utility-page-content {
+    width: 100%;
+  }
+
+  .utility-page-form {
+    margin-right: auto;
+    margin-left: auto;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+  }
+
+  .submit-button {
+    display: block;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #1f1d1d;
+    font-family: 'Libre Franklin', sans-serif;
+    text-transform: uppercase;
+  }
+
+  .submit-button:hover {
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #1f1d1d;
+  }
+
+  .link-2 {
+    width: auto;
+    font-family: 'Orator std font', 'Times New Roman', sans-serif;
+    color: #1f1d1d;
+    font-size: 22px;
+    letter-spacing: 0.06rem;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .paragraph-2 {
+    color: #1f1d1d;
+  }
+
+  .body-2 {
+    overflow: hidden;
+  }
+
+  .text-field {
+    position: relative;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .error-message {
+    overflow: visible;
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+    font-family: 'Libre Franklin', sans-serif;
+    color: #1f1d1d;
+  }
+
+  .button {
+    display: block;
+    width: 24%;
+    margin-top: 8px;
+    border: 1px solid #000;
+    background-color: #fff;
+    font-family: 'Libre Franklin', sans-serif;
+    color: #1f1d1d;
+    text-transform: uppercase;
+  }
+
+  .button.back {
+    width: 100%;
+  }
+
+  .div-block {
+    width: 40%;
+    max-width: none;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .div-block.password {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .video {
+    width: 50%;
+    height: 50%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .image-2 {
+    max-width: 24%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .field-label {
+    font-weight: 600;
+  }
+
+  .image-3 {
+    max-width: 300px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .body-404 {
+    overflow: hidden;
+  }
+
+  .text-block {
+    text-transform: none;
+  }
+
+  .text-block-2 {
+    text-transform: lowercase;
+  }
+
+  .text-block-3 {
+    text-transform: lowercase;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .submit-button {
+    text-transform: uppercase;
+  }
+
+  .button.back {
+    text-transform: uppercase;
+  }
+
+  .text-block {
+    text-transform: none;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .heading.password {
+    line-height: 64px;
+  }
+
+  .body.password {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .heading-2 {
+    overflow: visible;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    min-width: auto;
+    text-align: left;
+    -o-object-fit: fill;
+    object-fit: fill;
+  }
+
+  .button {
+    width: 50%;
+  }
+
+  .div-block {
+    max-width: none;
+  }
+
+  .body-404 {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .text-block {
+    text-transform: none;
+  }
+}
+
+@font-face {
+  font-family: 'Orator std font';
+  src: url('../fonts/Orator-Std-Font.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
