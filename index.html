@@ -129,12 +129,13 @@
     </script>
     <script>
 
-//uxuirish.xyz
-document
-    .getElementById("uxBtn")
-    .addEventListener("click", function(  ){ 
-        return confirm("🛑⛔️🫷🥺🫸 Stop! This website reflects my 9-5 self. Do you really want to see this side of me?") ;
-    });
+//uxuirish.xyz alert
+
+document.getElementById("uxBtn").addEventListener("click", function (event) { 
+    if (!confirm("🛑⛔️🫷🥺🫸 Stop! This website reflects my 9-5 self. Do you really want to see this side of me?")) {
+        event.preventDefault(); // Prevent the default action (e.g., navigation)
+    }
+});
 
 //90s cursor effects by tholman
   window.addEventListener("load", (event) => {
