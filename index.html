@@ -74,16 +74,16 @@
       <div class="projects">
         <h4>Catch my small websites ── .✦</h4>
         <div class="project-list">
-        <div class="project-name"><a href="#">coming soon!</a></div>
+        <div class="project-name"><a href="https://we-once-existed-here.glitch.me/">we once existed here</a></div>
         <div class="project-name" id="uxBtn"><a href="http://uxuirish.xyz">uxuirish.xyz (boring!)</a></div>
+        <div class="project-name"><a href="https://its-all-cyclical.glitch.me/">it's all a cycle (WIP)</a></div>
+        <div class="project-name"><a href="https://kilo-crisis-hour.glitch.me/">existential crisis hour (html mv)</a></div>
+        <div class="project-name"><a href="https://laced-oval-duke.glitch.me/">the thing</a></div>
         <div class="project-name"><a href="#">coming soon!</a></div>
         <div class="project-name"><a href="#">coming soon!</a></div>
         <div class="project-name"><a href="#">coming soon!</a></div>
         <div class="project-name"><a href="#">coming soon!</a></div>
-        <div class="project-name"><a href="#">coming soon!</a></div>
-        <div class="project-name"><a href="#">coming soon!</a></div>
-        <div class="project-name"><a href="#">coming soon!</a></div>
-        <div class="project-name"><a href="#">coming soon!</a></div>
+        <div class="project-name" id="dPoetics"><a href="askmycomputer/index.html">ask my computer</a></div>
         <div class="snow">
           <div class="snowflake">*</div>
           <div class="snowflake">*</div>
@@ -137,6 +137,13 @@ document.getElementById("uxBtn").addEventListener("click", function (event) {
     }
 });
 
+//Digital Poetics alert
+document.getElementById("dPoetics").addEventListener("click", function (event) { 
+    if (!confirm("🍋 Phase 1 of this poem was created at Digital Poetics #1, Gray Area. It is a subtle poke at digital divination and treating the internet as our oracle. Phrase 2 WIP. ʚɞ ⁺˖ ⸝⸝")) {
+        event.preventDefault(); // Cancel button
+    }
+});
+
 //90s cursor effects by tholman
   window.addEventListener("load", (event) => {
     new cursoreffects.fairyDustCursor({
@@ -157,15 +164,16 @@ let lineCount = 1;
 
 function addLine(){
   if (lineCount === 1) {
-    line1.textContent = "Expanding into internet art. Reliving slow narratives through a handmade poetic web.";
+    //line1.textContent = "Background in AI/Human-Computer Interaction research at the University of California, Santa Cruz. Graphic design to designing interfaces.";
+    line1.innerHTML = "Background in AI/Human-Computer Interaction research at the University of California, Santa Cruz. From <a href='alay.html' target='_blank'>graphic design</a> to designing interfaces.";
   } else if (lineCount === 2) {
-    line2.textContent = "No templates. No frameworks. Maybe a few libraries.";
+    line2.textContent = "Expanding into internet art. Reliving slow narratives through a handmade poetic web.";
   } else if (lineCount === 3) {
-    line3.textContent = "Dreaming of creating agency towards a loving internet. A reminder that there is always a human behind the technology.";
+    line3.textContent = "Dreaming of creating agency towards a loving internet. A reminder that there is a real human behind technology.";
   } else if (lineCount === 4) {
-    line4.innerHTML = '<a href="https://www.yourworldoftext.com/~digirish/" target=”_blank”>sign guestbook</a> / <a href="https://www.are.na/irish-sy/"  target=”_blank” ">are.na</a> / <a href="https://www.instagram.com/_t__sy"  target=”_blank” >ig</a>';
+    line4.innerHTML = '<a href="https://www.yourworldoftext.com/~digirish/" target=”_blank”>sign guestbook</a> / <a href="https://www.are.na/irish-sy/"  target=”_blank” ">are.na</a> / <a href="https://www.instagram.com/_t__sy"  target=”_blank” >instagram</a>';
   } else if (lineCount === 5) {
-    line5.innerHTML = '<img src="/photos/me hehe.png" id ="me-hehe" /><p id = "hi">hi!</p>';
+    line5.innerHTML = '<img src="photos/me_hehe.png" id ="me-hehe" /><p id = "hi">hi!</p>';
     addLineButton.remove();
   }
   lineCount++;

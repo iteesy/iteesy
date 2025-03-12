@@ -1,0 +1,84 @@
+@font-face {
+    font-family: "Terminal Grotesque";
+    src:
+      local("Terminal Grotesque"),
+      url("terminal-grotesque_open.ttf") format("otf"),
+      url("terminal-grotesque") format("ttf");
+  }
+
+
+
+body {
+    background-image: url("background.png");
+    background-size: cover; 
+    height: 100%;
+    width: 100%;
+   }
+
+h1 {
+    font: 8rem "Terminal Grotesque Open", sans-serif;
+    color:#FDD4FC;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #F631F3;
+    line-height: 0;
+    text-shadow: 0px 0px 20px #EEA8EC;
+    font-stretch: ultra-condensed;
+}
+
+
+.header {
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    display: inline-block;    }
+    
+
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #F631F3;
+    border-radius: 5px;
+    background-color: #fff;
+    opacity: 80%;
+    height: fit-content;
+    box-shadow: 0px 0px 20px #EEA8EC;
+}
+
+.line1 {
+    flex: 1;
+    padding-top: 0px;
+    margin-left: 12px;
+    border: none;
+    height: 100%;
+    color: #F631F3; 
+    font: 8rem "Terminal Grotesque", sans-serif;
+    font-size: 2.8rem; 
+    line-height: normal;
+
+}
+
+.line1::placeholder {
+    color: #F631F3; 
+    font: 8rem "Terminal Grotesque", sans-serif;
+    font-size: 2.8rem; 
+    opacity: 50%;
+    line-height: normal;
+}
+
+input:focus {
+    outline: none;
+    border: none;
+}
+
+.addLineButton {
+    background: #F631F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    opacity: 100%;
+}
+.addLineButton:hover {
+    background: #F631F3;
+}
