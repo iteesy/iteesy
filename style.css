@@ -97,7 +97,7 @@ h1 {
   height: 100%;
   overflow: hidden;
   padding-left: 20px;
-  padding-right: 20px;
+  padding-right: 0px;
 }
 
 .project-list {
@@ -237,7 +237,7 @@ a {
   }
 
   h1 {
-    font-size: clamp(32px, 8vw, 48px);
+    font-size: clamp(32px, 10vw, 48px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -248,7 +248,6 @@ a {
   }
 
   .intro {
-    margin: 0;
     flex-direction: column-reverse;
     justify-content: flex-end;
     width: 100%;
@@ -284,10 +283,19 @@ a {
   }
 
   .project-name {
+    position: absolute;
+    top: -50px;
+    border: 1px solid #FF28EA;
+    border-radius: 100px;
+    white-space: nowrap;
+    opacity: 0;
+    animation: fall linear infinite;
+    background-color: white;
+    z-index: 1;
   }
-  
-  .snowflake:nth-child(1) { left: 10%; top: 8%; }
-  .snowflake:nth-child(2) { left: 20%; top: 9%; }
+
+  .snowflake:nth-child(1) { left: 10%; top: 9%; }
+  .snowflake:nth-child(2) { left: 20%; top: 10%; }
   .snowflake:nth-child(3) { left: 24%; top: 17%; }
   .snowflake:nth-child(4) { left: 41%; top: 22%; }
   .snowflake:nth-child(5) { left: 42%; top: 24%; }
