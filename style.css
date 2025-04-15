@@ -29,6 +29,13 @@ font-display:auto;font-style:italic;font-weight:700;font-stretch:normal;
   src: url("./fonts/Palace script.ttf") format("truetype");
 }
 
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  opacity: 1;
+  }
+
 body {
   background: white;
   background-image: radial-gradient(ellipse at 50% 50%, #FFDFF7 0%, #FFDFF7 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
@@ -109,9 +116,15 @@ h1 {
 }
 
 a {
+  text-decoration: underline dotted;
   color: #FF28EA;
   text-shadow: 0 2px 4px rgba(255, 40, 234, 0.25);
 }
+
+/* a:hover {
+  background-color: rgb(247, 253, 129);
+  text-shadow: 0 2px 4px rgba(255, 40, 234, 0.25);
+} */ 
 
 .bio {
   flex-basis: 40%;
@@ -135,6 +148,7 @@ a {
 }
 
 .project-name:hover {
+  background-color: #FFFFFF;
   animation-play-state: paused; /* Pauses animation on hover */
   transform: scale(1.1); /* Optional: Slight scale effect on hover */
 }
