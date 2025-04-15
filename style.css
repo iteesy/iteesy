@@ -29,12 +29,6 @@ font-display:auto;font-style:italic;font-weight:700;font-stretch:normal;
   src: url("./fonts/Palace script.ttf") format("truetype");
 }
 
-input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  opacity: 1;
-  }
 
 body {
   background: white;
@@ -368,4 +362,22 @@ a {
 .bio::-moz-selection {
   background-color: rgba(167, 243, 208, 0.5);
   color: #2D9D78;
+}
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #efefef;
+  padding: 1px 6px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: #5D5D5D;
+  border-image: initial;
+  border-radius: 0;
+  box-sizing: border-box;
+  font: inherit;
+  color: #000;
+  text-align: center;
+  cursor: default;
 }
