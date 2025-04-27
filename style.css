@@ -225,6 +225,28 @@ a {
   }
 }
 
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #efefef;
+  padding: 1px 6px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #767676;
+  border-image: initial;
+  border-radius: 2px;
+  box-sizing: border-box;
+  font: inherit;
+  color: #000;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+  cursor: default;
+}
+
+
 /*bio photo*/
 .line5 {
   display: flex;
@@ -239,7 +261,58 @@ a {
   padding: 2px;
 }
 
+/*pop-up styles!!!*/
+
+.popup {
+  position: absolute;
+  background: #FFFFFF;
+  border: 1px solid #FF28EA;
+  border-radius: 2px;
+  padding: 15px;
+  cursor: move;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.close-btn {
+  cursor: pointer;
+  color: #FF28EA;
+  font-size: 18px;
+  padding: 0 5px;
+}
+
+.close-btn:hover {
+  color: #FFB7F0;
+}
+
+.popup-content {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.popup a {
+  color: #FF28EA;
+  text-decoration: underline dotted;
+}
+
+.popup a:hover {
+  color: #FFB7F0;
+  text-decoration: underline dotted;
+}
+
+
 @media (max-width: 768px) {
+    .popup {
+      right: 0;
+    }
+
   .body {
     height: 100vh;
   }
@@ -330,7 +403,10 @@ a {
   .snowflake:nth-child(13) { left: 65%; top: 42%; }
   .snowflake:nth-child(14) { left: 15%; top: 52%; }
   .snowflake:nth-child(15) { left: 85%; top: 72%; }
+
 }
+
+/* END OF MOBILE STYLE */
 
 /* Selection styles */
 ::selection {
@@ -363,25 +439,3 @@ a {
   background-color: rgba(167, 243, 208, 0.5);
   color: #2D9D78;
 }
-
-
-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: #efefef;
-  padding: 1px 6px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #767676;
-  border-image: initial;
-  border-radius: 2px;
-  box-sizing: border-box;
-  font: inherit;
-  color: #000;
-  text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 100;
-  cursor: default;
-}
-
