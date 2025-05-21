@@ -32,7 +32,6 @@ font-display:auto;font-style:italic;font-weight:700;font-stretch:normal;
 
 body {
   background: white;
-  background-image: radial-gradient(ellipse at 50% 50%, #FFDFF7 0%, #FFDFF7 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
   height: 100vh;
   align-items: center;
   padding: 0px;
@@ -45,12 +44,9 @@ body {
   letter-spacing: -0.5px;
 }
 
-h4 {
-  margin-top: 1%;
-  margin-bottom: 0;
-  font-weight: bold;
-  padding: 0;
-  width: 100%;
+p {
+  color: rgb(74, 74, 74);
+  text-shadow: none;
 }
 
 .header-container {
@@ -93,12 +89,13 @@ h1 {
 
 .projects {
   position: relative;
-  max-width: 50vw; /* Slightly wider */
-  flex-basis: 40%;
+  max-width: 75vw;
+  flex-basis: 75%;
   height: 100%;
   overflow: hidden;
-  padding-left: 20px;
+  padding-left: 32px;
   padding-right: 0px;
+  background-image: radial-gradient(ellipse at 50% 50%, #FFDFF7 0%, #FFDFF7 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
 }
 
 .project-list {
@@ -121,9 +118,10 @@ a {
 } */ 
 
 .bio {
-  flex-basis: 40%;
-  padding-left: 20px;
-  padding-right: 20px;
+  flex-basis: 30%;
+  padding-left: 32px;
+  padding-right: 32px;
+  background: white;
 }
 
 .bio-text{
@@ -260,7 +258,11 @@ button {
   padding: 2px;
 }
 
-.socials {
+.star-icon {
+  height: 12px;
+  width: auto;
+  vertical-align: middle;
+  margin: 0 4px;
 }
 
 /*pop-up styles!!!*/
@@ -343,7 +345,7 @@ button {
   }
 
   .intro {
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: flex-end;
     width: 100%;
     height: 100vh;
@@ -441,23 +443,28 @@ button {
   color: #FF28EA;
 }
 
-/* Alternative selection colors for different elements */
-.project-name::selection {
-  background-color: rgba(147, 196, 253, 0.5); /* Increased opacity blue */
-  color: #4A90E2; /* Deeper blue for contrast */
+.socials {
+  list-style: none;
+  padding: 16px 0;
+  margin: 0;
 }
 
-.project-name::-moz-selection {
-  background-color: rgba(147, 196, 253, 0.5);
-  color: #4A90E2;
+.socials li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
 }
 
-.bio::selection {
-  background-color: rgba(167, 243, 208, 0.5); /* Increased opacity mint */
-  color: #2D9D78; /* Deeper mint for contrast */
+.socials li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-image: url('icons/icon-star.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
-.bio::-moz-selection {
-  background-color: rgba(167, 243, 208, 0.5);
-  color: #2D9D78;
-}
