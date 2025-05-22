@@ -58,6 +58,7 @@ p {
   background: inherit;
   backdrop-filter: blur(4px);
   z-index: 10;
+  text-align: left !important;
 }
 
 h1 {
@@ -72,6 +73,7 @@ h1 {
   filter: drop-shadow(0 0 10px #FFB7F0) drop-shadow(0 0 5px #FF5EDD);
   letter-spacing: 0.02em;
   z-index: 11;
+  text-align: left !important;
 }
 
 .h1-symbols {
@@ -527,13 +529,10 @@ button {
   }
 
   .header-container {
-    position: relative;
-    padding: 4px 0px 0px 0px;
-    margin: 0;
-    overflow: visible;
-    background: inherit;
+    padding: 0 !important;
+    background: none !important;
+    backdrop-filter: none !important;
     backdrop-filter: blur(4px);
-    z-index: 10;
   }
 
   .intro {
