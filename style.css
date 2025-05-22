@@ -531,7 +531,7 @@ button {
     padding: 0 ;
     margin: 0;
     overflow: visible;
-    background: inherit;
+    background: none !important;
     backdrop-filter: blur(4px);
     z-index: 10;
   }
