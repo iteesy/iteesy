@@ -44,6 +44,7 @@ body {
   letter-spacing: -0.5px;
 }
 
+
 p {
   color: rgb(74, 74, 74);
   text-shadow: none;
@@ -87,6 +88,188 @@ h1 {
   
 }
 
+/* Monitor styles */
+
+.monitor-container {
+  position: relative;
+  width: 100%;
+  margin: 32px 0;
+  min-height: 300px; /* Add minimum height to ensure visibility */
+}
+
+.monitor-frame {
+  position: relative;
+  width: 100%;
+  padding-bottom: 75%;
+  background-image: url('photos/landing-monitor.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1px solid red; /* Temporary border to see the frame */
+}
+
+.monitor-wrapper {
+  position: relative;
+  width: 400px;
+  max-width: 100%;
+  margin: 0 auto 32px auto;
+}
+
+.monitor-img {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.monitor-screen {
+  position: absolute;
+  top: 16%;
+  left: 12%;
+  width: 76%;
+  height: 62%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  color: #e0f7ff;
+  padding: 32px 32px;
+  box-sizing: border-box;
+  overflow: auto;
+  border-radius: 8px;
+  z-index: 1;
+  background: radial-gradient(ellipse at center, rgba(80,180,255,0.10) 60%, rgba(0,0,0,0.18) 100%), #2233aa;
+  box-shadow: 0 0 32px 8px #80d0ff44, 0 0 8px 2px #fff2;
+  font-family: 'letter-gothic-std', monospace;
+  text-shadow: 0 0 2px #fff, 0 0 8px #80d0ff88;
+}
+
+.monitor-screen .opening-line {
+  color: white;
+}
+
+.screen-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 32px;
+  color: #fff;
+}
+
+.monitor-power-indicator {
+  position: absolute;
+  bottom: 85px;  
+  right: 95px;   /* Move left */
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 4;
+  background: rgba(0,255,0,0.0); /*for testing purposes!!!*/
+  border-radius: 50%;
+}
+
+.monitor-screen.monitor-off {
+  background: #111 !important;
+  box-shadow: none !important;
+  color: #222 !important;
+  text-shadow: none !important;
+}
+
+.monitor-screen.monitor-off > * {
+  display: none !important;
+}
+
+.monitor-texture-canvas {
+  z-index: 3;
+}
+
+.monitor-flash {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(ellipse at center, #fff 60%, #b6e0ff 100%);
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+}
+
+.monitor-flash.vertical-wipe {
+  display: block;
+  animation: crt-vertical-wipe 0.35s cubic-bezier(.4,0,.2,1) forwards;
+}
+
+@keyframes crt-vertical-wipe {
+  0%   { height: 100%; opacity: 0.8; }
+  80%  { height: 2px;  opacity: 1; }
+  100% { height: 2px;  opacity: 0; }
+}
+
+.monitor-flash.active {
+  opacity: 0.7;
+  transition: opacity 0.18s;
+}
+
+.monitor-glitch {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+  background: none;
+}
+
+.monitor-glitch.active {
+  opacity: 1;
+  animation: glitch-anim 0.35s steps(2, end) forwards;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(120,200,255,0.18) 0px, 
+    rgba(120,200,255,0.18) 1px, 
+    transparent 1px, 
+    transparent 5px
+  ),
+  linear-gradient(90deg, rgba(80,180,255,0.12) 0%, rgba(255,255,255,0.08) 100%);
+  mix-blend-mode: lighten;
+}
+
+@keyframes glitch-anim {
+  0%   { opacity: 1; transform: translate(0,0) skewX(0deg);}
+  10%  { opacity: 1; transform: translate(-5px,2px) skewX(-5deg);}
+  20%  { opacity: 1; transform: translate(5px,-2px) skewX(5deg);}
+  30%  { opacity: 1; transform: translate(-8px,4px) skewX(-8deg);}
+  40%  { opacity: 1; transform: translate(8px,-4px) skewX(8deg);}
+  50%  { opacity: 1; transform: translate(0,0) skewX(0deg);}
+  100% { opacity: 0; transform: translate(0,0) skewX(0deg);}
+}
+
+.monitor-screen .addLineButton {
+  font-family: "letter-gothic-std", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  padding: 8px 8px;
+  box-shadow: none;
+  text-transform: none;
+  letter-spacing: 0;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.monitor-screen .addLineButton:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-color: #fff;
+}
+
+/* END OF BIO SECTION ------------------------------------------- */
+
 .projects {
   position: relative;
   max-width: 75vw;
@@ -118,13 +301,19 @@ a {
 } */ 
 
 .bio {
-  flex-basis: 30%;
-  padding-left: 32px;
-  padding-right: 32px;
-  background: white;
+  flex-grow: 0;
+  flex-basis: 9%;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  background-image: url('/photos/ocean.jpg');
+  background-size: cover;
+
 }
 
-.bio-text{
+.bio-text {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .project-name {
@@ -256,6 +445,8 @@ button {
 #hi {
   position: relative;
   padding: 2px;
+  color: #FF28EA;
+  text-shadow: 0 2px 4px #FFB7F0;
 }
 
 .star-icon {
@@ -319,6 +510,7 @@ button {
 
   .body {
     height: 100vh;
+
   }
 
   h1 {
@@ -349,8 +541,8 @@ button {
     justify-content: flex-end;
     width: 100%;
     height: 100vh;
-    padding-left: 1%;
-    padding-right: 1%; /* used to be 1% */
+    padding-left: 0;
+    padding-right: 0;
     gap: 1%;
   }
 
@@ -358,27 +550,25 @@ button {
     flex-shrink: 0;
     flex-grow: 0;
     flex-basis: 9%;
-    width: 80%;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: #efefef;
-    padding: 2px 6px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #767676;
-    border-image: initial;
-    border-radius: 2px;
-    box-sizing: border-box;
-    color: #000;
-    text-align: center;
-    font-family: Arial, system-ui, sans-serif;
-    font-weight: 100;
-    font-size: 12px;
-    cursor: default;
+  .monitor-screen {
+    position: absolute;
+    top: 11%;
+    left: 12%;
+  }
+
+  .monitor-power-indicator {
+    position: absolute;
+    bottom: 60px;  
+    right: 72px;   
+    width: 38px;
+    height: 38px;
+    z-index: 4;
+    background: rgba(0,255,0,0.0); /*for testing purposes!!!*/
   }
 
   .projects {
@@ -452,7 +642,18 @@ button {
 .socials li {
   position: relative;
   padding-left: 20px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.socials li a {
+  border: 1px solid white;
+  padding: 2px 5px 2px 5px;
+  color: black;
+  background-color: white;
+  border-radius: 25px;
+  text-align: center;
+  user-select: none;
+  box-shadow: 0 0 8px 4px white;
 }
 
 .socials li::before {
@@ -466,5 +667,9 @@ button {
   background-image: url('icons/icon-star.svg');
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.socials li a:hover {
+  color: #FF28EA;
 }
 
