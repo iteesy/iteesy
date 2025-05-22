@@ -528,10 +528,10 @@ button {
 
   .header-container {
     position: relative;
-    padding: 0 ;
+    padding: 4px 0px 0px 0px;
     margin: 0;
     overflow: visible;
-    background: none !important;
+    background: inherit;
     backdrop-filter: blur(4px);
     z-index: 10;
   }
@@ -543,7 +543,6 @@ button {
     height: 100vh;
     padding-left: 0;
     padding-right: 0;
-    gap: 1%;
   }
 
   .bio {
