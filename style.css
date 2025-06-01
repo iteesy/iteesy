@@ -234,7 +234,6 @@ h1 {
     transparent 5px
   ),
   linear-gradient(90deg, rgba(80,180,255,0.12) 0%, rgba(255,255,255,0.08) 100%);
-  mix-blend-mode: lighten;
 }
 
 @keyframes glitch-anim {
@@ -281,6 +280,22 @@ h1 {
   padding-left: 32px;
   padding-right: 0px;
   background-image: radial-gradient(ellipse at 50% 50%, #FFDFF7 0%, #FFDFF7 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
+  visibility: hidden;
+  border-radius: 8px;
+  display: none;
 }
 
 .project-list {
