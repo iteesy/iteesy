@@ -33,7 +33,7 @@ const line2 = document.querySelector(".line2");
 const line3 = document.querySelector(".line3");
 const line4 = document.querySelector(".line4");
 const line5 = document.querySelector(".line5");
-
+const line6 = document.querySelector(".line6");
 
 let lineCount = 1; 
 
@@ -130,12 +130,21 @@ function createPopup(content, index) {
 
 function addLine() {
   if (lineCount === 1) {
-    createPopup("Expanding into internet art. Reliving slow narratives of identity, girlhood, and temporality through a <a href='https://luckysoap.com/statements/handmadeweb.html' target='_blank'>handmade poetic web</a>.", lineCount);
+    createPopup("Reliving slow narratives of identity, girlhood, and temporality through a <a href='https://luckysoap.com/statements/handmadeweb.html' target='_blank'>handmade poetic web</a>. A homage to the internet's first generation of artists.", lineCount);
   } else if (lineCount === 2) {
     createPopup("Learned Human-Computer Interaction/AI at the University of California, Santa Cruz. Unlearned at School for Poetic Computation, NYC.", lineCount);
   } else if (lineCount === 3) {
     createPopup("Dreams of creating agency towards a loving internet. A reminder that there is a real human behind technology.", lineCount);
   } else if (lineCount === 4) {
+    createPopup(`🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭
+🌹🌿🌼🌕🍀🌻🌺🌲🦋🌾🌸🌴🍄🌳🌱💧
+🌵🌼🌕🌷👐🌿🌕🌻🌸🍀🌹🌾🌺💧🌲🌼
+🌱🦋🌵🌸🌿🌑🌻🍄🌴🌕🌼🌺🍒🌳🌻🌾
+🌸🌵🌕🌴🌼🌱🌲🍀🌑🌷🌹🌿🌻🌺🌕💧
+🍄🌻🍒🌸🌿🌷🌼🌾🌱🌕🦋🌴🌺🌳
+🌹🌻🌿🌼🍀🌕🌑🌾🌱🍒🌺🌲🌷🌼🦋🌴
+💧🌵🌼🌸🌳🌕🌷🌿🌻🌴🌑🌾🌺🌱🌼🌸`, lineCount);
+  } else if (lineCount === 5) {
     createPopup('<img src="photos/me_hehe.png" id="me-hehe" /><p id="hi">hi!</p>', lineCount);
     addLineButton.remove();
   }

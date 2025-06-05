@@ -83,8 +83,8 @@
         setTimeout(() => {
           el.style.opacity = '1';
         }, 40);
-        // Random delay between 20ms and 120ms
-        const delay = 20 + Math.random() * 100;
+        // Random delay between 10ms and 60ms
+        const delay = 15 + Math.random() * 50;
         i++;
         setTimeout(type, delay);
       }
