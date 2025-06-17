@@ -132,7 +132,7 @@ function addLine() {
   if (lineCount === 1) {
     createPopup("Reliving slow narratives of identity, girlhood, and temporality through a <a href='https://luckysoap.com/statements/handmadeweb.html' target='_blank'>handmade poetic web</a>. A homage to the internet's first generation of artists.", lineCount);
   } else if (lineCount === 2) {
-    createPopup("Learned Human-Computer Interaction/AI at the University of California, Santa Cruz. Unlearned at School for Poetic Computation, NYC.", lineCount);
+    createPopup("Learned Human-Computer Interaction/AI at the University of California, Santa Cruz. Unlearned at Engaging Education@UCSC. Continued to unlearn at School for Poetic Computation, NYC.", lineCount);
   } else if (lineCount === 3) {
     createPopup("Dreams of creating agency towards a loving internet. A reminder that there is a real human behind technology.", lineCount);
   } else if (lineCount === 4) {
