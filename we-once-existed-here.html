@@ -1,0 +1,782 @@
+<html>
+  <!-- Hello inspector! :) This is a handmade site. By opening this, maybe you wanted to know my process, if I really did this without a web builder, or maybe you're an eng and want to critique the DOM. Whatever reason, I think it's cool you're interested in checking this far. -->
+  <!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⡇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠀⢀⣀⣀⣀⣀⠀⠀⠀⢴⣴⡶⠶⠾⠞⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⡄⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠇⠀⠀⠀
+⠀⠀⠀⠀⠀⣴⣦⣦⠶⠟⠋⠀⠀⣀⠀⠀⠀⠉⠙⢿⡆⠀⠘⣷⣀⣤⣾⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡇⠀⢘⣿⣧⡀⠀⠀⣷⠛⠙⠛⠲⢤⡀⠀⢰⡿⠀⠀⢀⣤⡄⠀⠀⠀⢸⡟⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢿⡧⠀⠀⠀⠀⠀⠀⣿⠁⠀⠀⠀⠀⢸⡇⠀⠀⢻⡏⠉⠉⠙⠛⠷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣄⢸⡏⠈⢿⡆⠐⣿⠀⠀⠀⠀⠀⣿⠀⣽⡇⠀⢀⡾⢻⡿⠀⠀⠀⠺⠇⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠸⣿⣤⣤⣤⡄⠀⠐⣿⡀⠀⠀⠀⢀⡿⠁⠀⠀⢸⠇⠀⠀⠀⠀⠀⠀⠻⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠸⣯⠀⢽⡇⠀⠀⠀⣴⠏⠀⣿⠃⣰⡟⠁⢹⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠹⣦⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣤⣤⣤⡼⠏⠀⠀⠉⠓⠶⠛⠉⠀⠀⠘⠛⠋⠀⠀⠹⢇⠀⠀⢠⣦⣶⠄⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠷⠿⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣤⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣀⠀⠀⠀
+⣰⠶⠶⣦⣀⠀⢀⡞⠁⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⠂⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⠋⠀⠸⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢴⡶⣄⠀⠀⠀⠀⣠⠞⣩⠟⠀⠀⠀
+⢸⡇⠀⠈⠹⠿⠏⠀⢀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⡇⠀⠸⢿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣶⡿⠁⠀⠀⠀⢿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣇⢹⣇⠀⠀⣾⠇⣸⠇⠀⠀⠀⠀
+⠈⠻⣦⣀⠀⠀⠀⠀⣼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢐⣿⠀⠀⠀⠈⠻⣶⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⠏⠀⠀⠀⠀⠀⠈⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡄⠹⣷⡼⢋⡾⠃⠀⠀⠀⠀⠀
+⠀⠀⠈⠛⠷⣦⠄⢰⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢾⡇⠀⠀⠀⠀⠀⠀⠻⢢⣄⣀⣀⣀⣀⣀⣀⣀⣸⡇⠀⠀⠀⠀⠀⠀⠀⠸⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣷⠀⠀⣠⠟⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠐⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠉⠉⠉⠉⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⢿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣧⣠⠇⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⣠⠖⢻⡇⠀⠀⠀⢸⡯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⣿⠈⠛⠁⢀⡞⠁⠀⠀⠀⢺⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡀⠀⣠⠟⠁⠀⠀⠀⠀⠘⠏⡀⠀⠀⠀⢠⣤⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⡷⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⢀⠀⠀⢀⣴⣤⠀⠀⠀⠀⠈⠛⢶⠃⠀⠀⠀⠀⠀⡀⠀⣼⠏⠀⠀⠀⠘⠿⣾⠿⠂⠀⠀⠀⣀⡄⠀⠀⠀⠀⠀⠘⠿⠿⠃⠀⠀⠀⠀⠀⣦⣄⣄⣤⣴⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠘⣷⠶⠿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠚⠛⠛⣿⠟⠁⡀⠀⣠⣴⠀⠀⠀⠀⠀⣰⡿⠻⣧⡀⠀⠀⠀⠀⠀⢀⡤⢀⡴⣶⣇⠀⣿⡍⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠘⣧⣴⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⣰⣧⠞⢻⠃⠀⠀⠀⠀⠘⠉⠀⠀⠈⠛⠀⠀⠀⠀⠀⠘⠛⠋⠀⠋⠉⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣴⠟⢿⡄⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠿⢦⣤⣤⣤⠀⠀⠀⢀⡀⠀⠀⠀⠀⣠⠞⣿⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣆⠀⢠⣴⡆⠀⠀⠀⠀⠈⠛⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⡿⠀⠀⠀⠀⠀⠀⠀⢰⣟⠛⢷⣄⣀⡴⠁⣴⠃⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⣤⣀⡀⠀⢿⠠⣿⣾⣿⢻⡇⠀⠀⠀⠀⠀⠀⠀⠹⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢋⡀⠀⠀⠀⠀⠀⠀⠈⢿⡄⠀⠉⠉⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣿⡈⢹⣿⢷⣿⣾⣿⣿⠇⡼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣆⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠸⣇⢸⣿⣿⢽⣿⣿⡏⣸⠃⠀⠀⠀⠀⠀⣼⡗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣷⡀⠀⠀⠀⠀⠀⠀⠉⠹⡶⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠹⣯⣿⠃⣿⣿⣿⢺⠇⠀⠀⠀⠀⣠⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⣄⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠿⣦⣿⣿⢇⡎⠀⠀⠀⣠⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣄
+⠀⠀⠀⠀⠀⠀⠀⣠⡀⠈⠻⢷⡾⠀⠀⢀⣾⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⣠⠏⡽
+⠀⠀⠀⠀⠀⠀⠀⠹⣿⣦⣄⢸⢿⠀⣴⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⢼⡏⠉⠛⠛⠛⠁⢰⠇
+⠀⠀⠀⠀⠀⠀⠀⠀⠹⣷⡉⢿⣿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⣀⠀⠀⠀⠈⣿⡀⠀⠀⠀⠀⡿⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢷⣄⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠈⠻⣦⣤⣀⠸⠁⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡿⣿⡄⠀⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⡄⠀⠀⠀⠀⠀⠉⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡿⠀⣹⡂⠀⠀⠀⠀⠠⣶⠿⢛⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠻⠷⣶⣄⠀⠀⠀⠀⠀⠀⠈⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⡿⠁⠀⢘⡅⠀⠀⣠⣶⡷⠀⠀⢸⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡃⠀⠀⠙⢷⣄⠀⠀⠀⠀⠀⠈⣱⡄⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢸⣧⠀⠀⠈⣷⠀⣺⠟⠋⠀⠀⠀⣼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠘⠿⣦⣴⣶⣶⡾⠟⠁⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠸⠻⢷⣤⣀⣹⠞⠁⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣽⡇⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⢺⡀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣺⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀-->
+
+  <head>
+<style>
+  body {
+  background-color: #f7f7f7;
+}
+
+html {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='25' height='30' viewport='0 0 100 100' style='fill:black;font-size:15px;'><text y='50%'>✿</text></svg>")
+      16 0,
+    auto;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: monospace;
+  color: #041ee8; /* blue text */
+  overflow: hidden; /* This disables scrolling */
+}
+
+.centered {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-aligned {
+  text-align: center;
+}
+
+  /*.content-wrapper {
+  display: flex;
+  padding: 16px;
+  position: relative;
+justify-content: space-between;
+  overflow: visible;
+  flex-direction: column;
+  align-items: center;
+}*/
+
+.intro {
+  margin-bottom: 24px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-text-wrapper {
+  background: #ffffff;
+  border: solid 1px;
+  padding: 14px 24px;
+}
+
+#start {
+  background: linear-gradient(#f3f3f3, #b6b6b6);
+  border: 1px solid #afaeae;
+  border-radius: 2px;
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+  font-family: sans-serif;
+}
+
+/* Adding transformation when the button is active */
+#start:active {
+  background: linear-gradient(#b6b6b6, #f3f3f3);
+}
+
+.link-button {
+  background: none;
+  color: blue;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.link-button:hover {
+  color: darkblue;
+}
+
+a:hover {
+  color: darkblue;
+}
+
+
+#next {
+  position: fixed; /* Fix the position relative to the viewport */
+  top: 80%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Offset by 50% of its size to center perfectly */
+  display: block;
+    background: linear-gradient(#f3f3f3, #b6b6b6);
+  border: 1px solid #afaeae;
+  border-radius: 2px;
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+  font-family: sans-serif;
+  z-index: 999;
+}
+
+#next:active {
+  background: linear-gradient(#b6b6b6, #f3f3f3);
+}
+
+#controls {
+  position: fixed; /* Fix the position relative to the viewport */
+    bottom:7;
+    left:8;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  color: black;
+  font-family: sans-serif;
+  z-index: 999;
+}
+
+.slide-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.photo-container img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  position: absolute;
+}
+
+
+.text-container,
+.title-container {
+  z-index: 998;
+   display: block;
+  position: absolute;
+  
+}
+
+.title-container {
+  font-weight: bold;
+
+}
+
+.text-container { /* Understand why this div is so whack */
+  position: absolute; 
+  width: 100%; 
+  height: 100%; 
+  z-index: 900;
+
+}
+
+/*     MOBILE EXPERIENCE */
+
+.mobile_visible {
+  display: none;
+}
+
+@media screen and (max-width: 674px) {
+  body,
+  html {
+    color: darkblue;
+    font-size: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .body,
+  .intro,
+  .slide-container,
+  .photo-container,
+  .text-container,
+  .title-container,
+  #next{
+    display: none;
+  }
+
+  .mobile_visible {
+    display: block;
+  }
+}
+
+</style>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✿</text></svg>"
+    />
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>we once existed here</title>
+  </head>
+</html>
+<body>
+
+  <div id="slide-container" style="display: none">
+    <div class="title-container"></div>
+    <div class="photo-container"></div>
+    <div class="text-container"></div>
+
+  </div>
+    <!-- next --> 
+
+  <button id="next" style="display: none">Next</button>
+    <!-- music player --> 
+    <div id="" class="playercontainer" style="display: none">
+      <div id="controls" class="controls">
+        <button id="playpause-btn" onclick="playPauseTrack()">▶</button>
+      </div>
+  </div>
+  <audio id="mu" src="https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/Id_Like_To_Walk_Around_in_Your_Mind.mp3?v=1741559354044" style="display: hidden;"></audio>
+
+
+  <div class="intro">
+    <div class="intro-text-wrapper">
+      <div class="text-aligned">
+        <h2 id="project-title">we once existed here</h2>
+        <p id="blurb">
+          this is my love letter to the places that i’ve lived in that are still
+          beautiful despite what they might be now. <br />there is a part of me
+          who exists here that doesn't exist anywhere else.<br /><br />this
+          pulls from my memories and shared memories submitted from my
+          <a href="https://forms.gle/V7De7vkXMSrDpagF9">friends</a>. <br />each
+          memory is supplemented with my take on
+          <a href="https://www.instagram.com/googleearthphotography/"
+            >google earth photography</a
+          >. <br /><br />
+
+          -
+          <br /><br />
+          <button id="about-link" class="link-button">about</button> // made by
+          <mark
+            style="
+              color: darkblue;
+              border: solid 1px #041ee8;
+              background: #ffffff;
+            "
+            >irish</mark
+          >
+          &amp;
+          <mark
+            style="
+              color: darkblue;
+              border: dashed 1px #041ee8;
+              background: #ffffff;
+            "
+            >friends</mark
+          > // <a href="https://www.yourworldoftext.com/~digirish/"
+            >guestbook</a
+          >
+          <br />
+        </p>
+        <br />
+        <button id="start">start</button>
+      </div>
+    </div>
+  </div>
+  <div id="text-scroller" class="text-overflow-wrapper">
+    <div id="text-container"></div>
+  </div>
+  
+
+</body>
+  <!-- mobile version -->
+
+<div class="mobile_visible">
+  <h2>sorry, no small screen!</h2>
+
+  <p>please open in big screen :)</p>
+</div>
+
+<!-- using jQuery!-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+//WELCOME
+  window.onload = function() {
+    alert("Will you still love the places you’ve lived in despite what happens to them?");
+  };
+
+//ABOUT
+$(document).ready(function () {
+  $("#about-link").click(function () {
+    // Update h2 and p stringz
+    $("#project-title").text("about");
+    $("#blurb").html(
+      "i went to this new coffee shop down in arkansas. my uber driver picked me up and asked “what did this place used be?” what did this place used to be? “i don’t know. i’m actually not from here!” then they went on making guesses. this exact conversation played out at my next destination. and another one. and another one. google maps was right but google earth from six years ago told a different story. this city is moving faster than the people here can keep up.<br><br> and i understand this reaction. it’s a lil memory game of what once was and who even remembers, but we’re unsure if the reasons these places changed were for better or worse. sometimes the reasons are benign. the owners retire. a local starts their dream shop. a couple wants to share their love of sweet treats. sometimes it is insidious. <br><br>we can't always access all the places that came before or after the places we once knew but i’d like to think they hold an essence of who we are today. there is a part of me that exists there that's different from other parts of me elsewhere but they all still live inside of me.<br><br><b>will you still love the places you’ve lived in despite what happens to them?</b><br>"
+    ); //html so it can read the breaks
+    $(".intro-text-wrapper").css("width", "500px"); // Set the width to any desired value
+  });
+});
+
+// Click start button
+$("#start").click(function () {
+  $(".intro").remove(); // Remove intro
+  $("#start").hide(); // Hide start button
+  $("#slide-container").show(); // Show slide container
+  showSlide(currentSlide); // Show first slide
+  $("#next").show(); // Show next button
+    $(".iframe").show(); // Show iframe button
+  $(".playercontainer").show(); 
+  // AUTOPLAY MUSIC
+  let audio = document.getElementById("mu");
+  audio.play();
+  
+  // Update play/pause button icon on autoplay
+  $("#playpause-btn").html("⏸"); 
+});
+
+//Music player
+const playlist = new Set(); 
+const song1 = {
+  src: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/Id_Like_To_Walk_Around_in_Your_Mind.mp3?v=1741559354044",
+  title: "I'd Like To Walk Around in Your Mind",
+  artist: "Vashti Bunyan",
+};
+
+playlist.add(song1); 
+
+document.getElementById("mu").src =
+  song1.src;
+
+function playPauseTrack() {
+  if (document.getElementById("mu").paused == true) {
+    document.getElementById("mu").play();
+    document.getElementById("playpause-btn").innerHTML =
+      "⏸";
+  } else if (document.getElementById("mu").paused == false) {
+   document.getElementById("mu").pause();
+   document.getElementById("playpause-btn").innerHTML =
+      "▶";
+  }
+}
+
+//SLIDES
+//Array of each slide
+const slides = [
+  //Slide 1 - 99 cent store
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/99cent.png?v=1731626596973",
+        alt: "99 cent storefront",
+        position: { top: "5%", left: "2%" },
+      },
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/99cent-reddit.png?v=1731630126187",
+        alt: "99 cent mourning from a redditor",
+
+        position: { top: "55%", left: "65%" },
+      },
+      /* Might be repetitive {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/99cent-permanently-closed.png?v=1731630436978",
+        alt: "99 cent permanently closed in a google maps",
+
+        position: { top: "60%", left: "50%" },
+      },*/
+    ],
+    title: "The 99 Cents Only Store",
+    titlePosition: { top: "10%", left: "35%" },
+    text: [
+      {
+        content:
+          "my mom always got instant mashed potatoes here.<br>i thought it was part of food futurism and not a poor family struggle meal.",
+        position: { top: "18%", left: "55%" },
+        /*width: "5px",*/
+      },
+      {
+        content:
+          "i went here so often that i think it was the first place i was allowed to wander around alone.",
+        position: { top: "35%", left: "45%" },
+      },
+      {
+        content: "it closed down this year.",
+        position: { top: "46%", left: "50%" },
+      },
+    ],
+  },
+    //Slide 2 - Orenchi
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/orenchi%20closed.png?v=1731884739832",
+        alt: "orenchi blurred signane",
+        position: { top: "-1%", left: "68%" },
+      },
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/orenchi%20sign.png?v=1731884946825",
+        alt: "Sorry we're closed sign",
+        position: { top: "65%", left: "8%" },
+      },
+    ],
+    title: "this one ramen spot",
+    titlePosition: { top: "3%", left: "3%" },
+    text: [
+      {
+        content: "trying orenchi ramen",
+        position: { top: "8%", left: "9%" },
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+      {
+        content:
+          "i would be so excited to unlock new cities like this one. ironically, it no longer felt new as years later i ended up living right by here. i never visited here again.",
+        position: { top: "14%", left: "19%" },
+        width: "7%",
+      },
+      {
+        content: "after 17 years, it closed down two weeks ago.",
+        position: { top: "46%", left: "32%" },
+      },
+    ],
+  },
+  //Slide 3 - Lake tahoe 2016
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/lake%20tahoe.png?v=1731879897119",
+        position: { top: "35%", left: "15%" },
+      },
+    ],
+    title: "our first big friendship trip at Lake Tahoe",
+    titlePosition: { top: "30%", left: "48%" },
+
+    text: [
+      {
+        content:
+          "we had like a 2 hour deep talk in the middle of the night when everyone was sleeping; I vaguely remember it being about our future careers and also overall existential crisis of what our 626 selves are doing with our lives LOL I feel like that opened the door to us getting really close, especially within that group too :). AND I vividly remember mentioning this same memory in a negative light during one of our friend gatherings because that negativity was implied in the prompt, but I want to make it clear for the record that I only did that to avoid drinking 💀 I cherish that memory and our friendship a ton! <br>Is this too long????",
+        position: { top: "36%", left: "61%" },
+        border: "1px dashed #041EE8", // a friend said this!
+        width: "12%",
+      },
+      {
+        content: "i saw snow for the first time here.",
+        position: { top: "78%", left: "80%" },
+      },
+    ],
+  },
+
+
+  //Slide 4 - AMC Fullerton
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/amcfullerton.png?v=1731886925128",
+        alt: "AMC Fullerton entrance",
+        position: { top: "42%", left: "14%" },
+      },
+    ],
+    title: "the amc theater in fullerton",
+    titlePosition: { top: "10%", left: "8%" },
+
+    text: [
+      {
+        content:
+          "you held a knife to my throat and made me watch challengers with you (lol or if you need a less meme-y description: we watched challengers and afterward talked about sports anime and metaphors over coffee) ",
+        position: { top: "30%", left: "38%" },
+        width: "9%",
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+                  {
+        content: "having a friend you saw everyday to once a year is absurd, quiet, yet comforting",
+        position: { top: "40%", left: "64%" },
+                    width: "5%",
+      },
+    ],
+  },
+
+  //Slide 5 - Mercado González
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/mercado-pre.png?v=1731890344287",
+        alt: "Mercado González before built",
+        position: { top: "22%", left: "14%" },
+      },
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/mercado-post.png?v=1731890331945",
+        alt: "Mercado González after built",
+        position: { top: "62%", left: "14%" },
+      },
+    ],
+    title: "mercado gonzález northgate market",
+    titlePosition: { top: "22%", left: "48%" },
+
+    text: [
+      {
+        content:
+          "we grabbed dinner and churros and reflected on what growing up means as friends and as individuals. something something it’s not possible to stay friends with the people we met in hs and that’s true because you are not the same person i met in hs",
+        position: { top: "30%", left: "42%" },
+        width: "9%",
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+                  {
+        content: "my-hometown-life-as-faceless-memories-are-worthwhile-because-of-all-the-girls-who-showed-up-for-me",
+        position: { top: "55%", left: "72%" },
+        width: "5%"
+      },
+    ],
+  },
+
+  //Slide 6 - Coffee code
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/coffeecode.png?v=1731891798527",
+        alt: "Coffee code cafe entrance",
+        position: { top: "40%", left: "21%" },
+      },
+    ],
+    title: "this cafe that used to be so popular in the 2010s",
+    titlePosition: { top: "12%", left: "38%" },
+
+    text: [
+      {
+        content:
+          "we were so young and both disillusioned with people we knew and our environments up until that point but we were also learning how to use our voices",
+        position: { top: "30%", left: "48%" },
+        width: "10%",
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+                        {
+        content: "and finally, i am now past resentment of our former souls. i've learned to love every version of us.",
+        position: { top: "55%", left: "59%" },
+        width: "7%",
+      },
+    ],
+  },
+  
+    //Slide 7 - Packing district
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/packing%20district.png?v=1731910378256",
+        alt: "packing district",
+        position: { top: "32%", left: "72%" },
+      },
+    ],
+    title: "somewhere in tourist anaheim",
+    titlePosition: { top: "22%", left: "64%" },
+
+    text: [
+      {
+        content:
+          "omg remember when we met up at the anaheim packing district during the summer when we were home from college… i somehow also remember brian driving us once and he took us to dinner :’)",
+        position: { top: "40%", left: "38%" },
+        width: "10%",
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+            {
+        content: "i remember :')",
+        position: { top: "64%", left: "59%" },
+      },
+    ],
+  },
+      //Slide 8 - Hair salon
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/hair%20salon.png?v=1731911612993",
+        alt: "Hair Desire by Andy Salon",
+        position: { top: "22%", left: "50%" },
+      },
+    ],
+    title: "this salon in little saigon",
+    titlePosition: { top: "26%", left: "28%" },
+
+    text: [
+      {
+        content:
+          "friendship games 2016, we took a road trip and stayed at your fam’s place in Anaheim. you booked a hair appointment to dye your hair blonde. I remember me and the others waiting forever lol",
+        position: { top: "30%", left: "38%" },
+        width: "10%",
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+            {
+        content: "every hairstyle is a new era in my life! this was the first time i had a choice to do my hair how i wanted. but this one came with a roadtrip.",
+        position: { top: "55%", left: "20%" },
+        width: "12%",      
+      },
+    ],
+  },
+  
+   //Slide 9 - Toledo SC
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/toledo%20sc.png?v=1731955738046",
+        alt: "Driveway of a home leading to a window",
+        position: { top: "6%", left: "80%" },
+      },
+    ],
+    title: "the summer away from home spent here",
+    titlePosition: { top: "32%", left: "58%" },
+
+    text: [
+      {
+        content:"we have so many memories together at this point but one random summer day we binged an entire anime in one sitting/day randomly came to mind :’)",
+        position: { top: "38%", left: "3%" },
+        border: "1px dashed #041EE8", // a friend said this!
+      },
+            {
+        content: "i appreciate friends who host so much!! we don't thank them enough!!!",
+        position: { top: "55%", left: "20%" },  
+      },
+    ],
+  },
+     //Slide 10 - College dorm room
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/c9.png?v=1731957939987",
+        alt: "Entrance to a college dorm building",
+        position: { top: "20%", left: "0%" },
+      },
+    ],
+    title: "this dorm building",
+    titlePosition: { top: "28%", left: "32%" },
+
+    text: [
+      {
+        content:"do u remember when we (the first years) would constantly yell Irish under your window rly obnoxiously until u said hi :’)",
+        position: { top: "32%", left: "47%" },
+        border: "1px dashed #041EE8", // a friend said this!
+        width: "8%",
+      },
+            {
+        content: " ♡ ♡ ♡ ",
+        position: { top: "55%", left: "80%" },    
+      },
+    ],
+  },
+       //Slide 11 - SJ station
+  {
+    photos: [
+      {
+        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/sjstation.png?v=1731986491620",
+        alt: "san jose train station entrance",
+        position: { top: "42%", left: "40%" },
+      },
+    ],
+    title: "san jose diridon station",
+    titlePosition: { top: "43%", left: "72%" },
+
+    text: [
+      {
+        content:"we had basically just met cause it was my first year and we ran into each other at diridon station cause i was going to SFO from santa cruz and i forgot where you were going and i take a selfie of us lol but it was like my first solo encounter with you",
+        position: { top: "60%", left: "78%" },
+        border: "1px dashed #041EE8", // a friend said this!
+        width: "12%",
+      },
+            {
+        content: "public transportation encounters ♡",
+        position: { top: "80%", left: "72%" },    
+      },
+    ],
+  },
+         //Slide 12 - Fin
+  {
+    title: "fin. thank you to School For Poetic Computation: Digital Love Languages 2024 ♡",
+    titlePosition: { top: "35%", left: "40%" },
+
+    text: [
+            {
+        content: "if you made it this far, thank you for letting me inhabit your screen. is this now your memory of me?",
+        position: { top: "40%", left: "20%" },
+      },
+      {
+        content: "instagram @_t__sy for more",
+        position: { top: "56%", left: "40%" },
+      },
+    ],
+
+  },
+  
+];
+
+let currentSlide = 0; // count for current slide
+
+function showSlide(index) {
+  // Set title 
+  $(".title-container").text(slides[index].title).css({
+    position: "absolute",
+    top: slides[index].titlePosition.top,
+    left: slides[index].titlePosition.left,
+    border: "solid 1px",
+  });
+
+  // Update photos if pics exist
+  $(".photo-container").empty(); // Clear previous photos
+  if (slides[index].photos) {
+    slides[index].photos.forEach((photo) => {
+      const imgElement = $(`<img src="${photo.url}" alt="Slide Image" />`);
+      imgElement.css({
+        top: photo.position.top,
+        left: photo.position.left,
+        position: "absolute",
+      });
+      $(".photo-container").append(imgElement);
+    });
+  }
+
+  // Update text if text exists
+  $(".text-container").empty(); // Clear previous text
+  if (slides[index].text) {
+    slides[index].text.forEach((textItem) => {
+      const pElement = $(`<p>${textItem.content}</p>`);
+      pElement.css({
+        position: "absolute",
+        top: textItem.position.top,
+        left: textItem.position.left,
+        border: textItem.border || "1px solid #041EE8", 
+        width: textItem.width || "auto", 
+      });
+      $(".text-container").append(pElement);
+    });
+  }
+}
+
+//Next button
+$("#next").click(function () {
+  // Go to next slide
+  currentSlide++;
+
+  // If last slide, remove the #next btton
+  if (currentSlide >= slides.length - 1) {
+    $("#next").remove();
+  }
+
+  // prevent looping back to the first slide
+  if (currentSlide < slides.length) {
+    showSlide(currentSlide);
+  }
+});
+
+
+</script>
