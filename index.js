@@ -4,19 +4,6 @@ function step() {
   document.title = message.substr(0,15);
 }
 
-//uxuirish.xyz alert
-document.getElementById("uxBtn").addEventListener("click", function (event) { 
-    if (!confirm("🛑⛔️🫷🥺🫸 Stop! This website reflects my 9-5 self. Do you really want to see this side of me?")) {
-        event.preventDefault(); // cancel button
-    }
-});
-
-//Digital Poetics alert
-// document.getElementById("dPoetics").addEventListener("click", function (event) { 
-//     if (!confirm("🍋 Phase 1 of this poem was created at Digital Poetics #1, Gray Area. It is a subtle poke at digital divination and treating the internet as our oracle. Phrase 2 WIP. ʚɞ ⁺˖ ⸝⸝")) {
-//         event.preventDefault(); // cancel button
-//     }
-// });
 
 //90s cursor effects by tholman
 window.addEventListener("load", (event) => {
@@ -132,19 +119,23 @@ function addLine() {
   if (lineCount === 1) {
     createPopup("Reliving slow narratives of identity, girlhood, and temporality through a <a href='https://luckysoap.com/statements/handmadeweb.html' target='_blank'>handmade poetic web</a>. A homage to the internet's first generation of artists.", lineCount);
   } else if (lineCount === 2) {
-    createPopup("Learned Human-Computer Interaction/AI at the University of California, Santa Cruz. Unlearned at Engaging Education@UCSC. Continued to unlearn at School for Poetic Computation, NYC.", lineCount);
-  } else if (lineCount === 3) {
     createPopup("Dreams of creating agency towards a loving internet. A reminder that there is a real human behind technology.", lineCount);
+  } else if (lineCount === 3) {
+    createPopup("Learned Human-Computer Interaction/AI at the University of California, Santa Cruz.<br><br>Unlearned at Engaging Education@UCSC.<br><br>Continued to unlearn at School for Poetic Computation, NYC.<br><br>Learned intensively at Creative Code Intensive @ Gray Area, SF.", lineCount);
   } else if (lineCount === 4) {
-    createPopup(`🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇵🇭🇨🇳🌹🌿🌼🌕🍀🌻🌺🌲🦋🌾🌸🌴🍄🌳🌱💧
-🌵🌼🌕🌷👐🌿🌕🌻🌸🍀🌹🌾🌺💧🌲🌼
-🌱🦋🌵🌸🌿🌑🌻🍄🌴🌕🌼🌺🍒🌳🌻🌾
-🌸🌵🌕🌴🌼🌱🌲🍀🌑🌷🌹🌿🌻🌺🌕💧
-🍄🌻🍒🌸🌿🌷🌼🌾🌱🌕🦋🌴🌺🌳
-🌹🌻🌿🌼🍀🌕🌑🌾🌱🍒🌺🌲🌷🌼🦋🌴
-💧🌵🌼🌸🌳🌕🌷🌿🌻🌴🌑🌾🌺🌱🌼🌸`, lineCount);
+    createPopup("She must really love learning.", lineCount);
   } else if (lineCount === 5) {
-    createPopup('<img src="photos/me_hehe.png" id="me-hehe" /><p id="hi">hi!</p>', lineCount);
+    createPopup("You can put her on the frontlines of defending girls with an awkward, weird, or dorky origin story. She, too, was co-parented by the internet.", lineCount);
+  } else if (lineCount === 6) {
+    createPopup("She is hoping that you're enjoying this on a big screen.", lineCount);
+  } else if (lineCount === 7) {
+    createPopup("At this point, she is curious about you. What brings you here? What are you hoping to find?", lineCount);
+  } else if (lineCount === 8) {
+    createPopup("You clicked again but you didn't answer.", lineCount);
+  } else if (lineCount === 9) {
+    createPopup("Do you think pigeons have opinions about architecture like if they prefer brutalist buildings or-", lineCount);
+  } else if (lineCount === 10) {
+    createPopup('<img src="photos/me_hehe.png" id="me-hehe" /><p id="hi">Bye! See you in the next update.</p>', lineCount);
     addLineButton.remove();
   }
   lineCount++;
@@ -187,7 +178,6 @@ powerBtn.addEventListener('click', function() {
 // MONITOR HOVER EFFECTS_____________________________
 const monitorScreen = document.querySelector('.monitor-screen');
 const originalContent = monitorScreen.innerHTML;
-const sfpcDll = document.getElementById('sfpc-dll');
 
 let monitorVideo = null;
 function playMonitorVideo(videoSrc) {
@@ -218,16 +208,33 @@ function stopMonitorVideo() {
     monitorScreen.style.background = 'radial-gradient(ellipse at center, rgba(80,180,255,0.10) 60%, rgba(0,0,0,0.18) 100%), #2233aa';
 }
 
+const sfpcDll = document.getElementById('sfpc-dll');
 sfpcDll.addEventListener('mouseenter', () => {
     playMonitorVideo('videos/weonceexistedhere.mp4');
 });
 sfpcDll.addEventListener('mouseleave', stopMonitorVideo);
 
-const uxBtn = document.getElementById('uxBtn');
-uxBtn.addEventListener('mouseenter', () => {
+
+const uxSite = document.getElementById('ux-site');
+uxSite.addEventListener('mouseenter', () => {
     playMonitorVideo('videos/uxuirish.mp4');
 });
-uxBtn.addEventListener('mouseleave', stopMonitorVideo);
+uxSite.addEventListener('mouseleave', stopMonitorVideo);
+
+//uxuirish.xyz alert
+uxSite.addEventListener("click", function (event) { 
+    if (!confirm("🛑⛔️🫷🥺🫸 Stop! This website reflects my 9-5 self. Do you really want to see this side of me?")) {
+        event.preventDefault(); // cancel button
+    }
+});
+
+const cciShowcase = document.getElementById('cci-showcase');
+if (cciShowcase) {
+  cciShowcase.addEventListener('mouseenter', () => {
+    playMonitorVideo('videos/cci.mp4');
+  });
+  cciShowcase.addEventListener('mouseleave', stopMonitorVideo);
+}
 
 const kiloMV = document.getElementById('kilo-mv');
 if (kiloMV) {
@@ -236,4 +243,3 @@ if (kiloMV) {
   });
   kiloMV.addEventListener('mouseleave', stopMonitorVideo);
 }
-

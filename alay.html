@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <!-- Google tag (gtag.js) -->
@@ -25,41 +24,80 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Irish Tee-Sy</title>
-    <link rel="icon" type="image/x-icon" href="/photos/favicon.png">
+    <title>Alay Anthology</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://use.typekit.net/psm7oqu.css"/>
+  
+
   </head>
+  
+  <body onload="setInterval(step,100)">
+    <!-- intro-->
+    <div class="intro">
+      <!-- col 1 -->
+      <div class="bio">
+        <div class="headshot"></div>
+        <!-- col 2 -->
+        <div class="bio-text">
+          <div class="monitor-wrapper">
+            <div class="monitor-power-indicator"></div>
+            <div class="monitor-screen">
+              <div class="monitor-glitch"></div>
+              <img src="photos/alay4.jpeg" alt="Alay anthology cover" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: fill; background: #2233aa; border-radius: 8px; z-index: 2;">
+            </div>
+            <img src="photos/landing-monitor.png" class="monitor-img" alt="Monitor frame">
+          </div>
+          <ul class="socials">
+            <li><a href="https://www.instagram.com/_t__sy" target="_blank">instagram</a></li>
+            <li><a href="https://www.are.na/irish-sy/" target="_blank">are.na</a></li>
+            <li><a href="https://www.letterboxd.com/iteesy" target="_blank">letterboxd</a></li>
+            <li><a href="https://www.yourworldoftext.com/~digirish/" target="_blank">sign guestbook</a></li>
+          </ul>
+          <p class="line1"></p>
+          <p class="line2"></p>
+          <p class="line3"></p>
+          <p class="line4"></p>
+          <p class="line5"></p>
+        </div>
+      </div>
+      
+      <!-- Case study section (replaces projects) -->
+      <div class="case-study">
+        <div class="header-container">
+          <h1>Alay Anthology <span class="h1-symbols">── .✦</span></h1>
+        </div>
+        
+        <div class="case-study-content">
+          <a href="index.html" class="back-link">← Back</a>
+          <h2>Printed Publication</h2>
+          <p>Alay <i>[ah-lie]</i> (Tagalog for "offering") is a print/art organization housed under Student Media/Bayanihan at the University of California, Santa Cruz. For over two decades, Alay has released a yearly anthology showcasing artistic submissions including photography, poetry, and drawings. This collection serves as a collaboration for self-expression from students of color, exploring how culture influences their diasporic identity. One year, I took on the role as one of the editor-in-chief.</p>
+          
+          <p>The theme was Sunrise / Sunset to represent the day in the lives of BIPOC and the Filipino youth community through art.</p>
+          
+          <p>If you would like a copy or see the booklet in person, I'd be more than happy to show you!</p>
+          
+          <div class="project-gallery">
+            <img src="photos/alay1.jpeg" alt="Book cover - Pagsikat ng Araw" width="515" height="600">
+            <img src="photos/alay3.jpeg" alt="What got you through the day? in text" width="535" height="600">
+            <img src="photos/alay4.jpeg" alt="Collage of responses from college students" width="675" height="600">
+            <img src="photos/alay2.jpeg" alt="Girl in a jacket digital art" width="535" height="600">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
+    <script src="index.js"></script>
+    <script src="monitor-texture.js"></script>
 
-
-
-  <style>
-    .alay {
-      margin: 10px;
-    }
-
-.alay-prev {
-            display: flex;
-            flex-direction: row;
-            overflow-x: auto;
-            gap: 20px;
-        }
-}
-  </style>
-
-  <div class="alay"> 
-    <a href="index.html">Back</a>
-
-    <h1>My journey to poetics started here.</h1>
-<p>Alay <i>[ah-lie]</i> (Tagalog for "offering") is a print/art organization housed under Student Media/Bayanihan at the University of California, Santa Cruz. For over two decades, Alay has released a yearly anthology showcasing artistic submissions including photography, poetry, and drawings. This collection serves as a collaborative platform for self-expression from students of color, exploring how culture influences their diasporic identity. One year, I took on the role as one of the editor-in-chief. </p>
-<p>The theme was  Sunrise / Sunset to represent the day in the lives of BIPOC and the Filipino youth community through art. </p>
-<p>If you would like a copy or see the booklet in person, I’d be more than happy to show you! </p>
-<div class="alay-prev">
-<img src="photos/alay1.jpeg" alt="Book cover - Pagsikat ng Araw" width="515" height="600">
-<img src="photos/alay3.jpeg" alt="What got you through the day? in text" width="535" height="600">
-<img src="photos/alay4.jpeg" alt="Collage of responses from college students" width="675" height="600">
-<img src="photos/alay2.jpeg" alt="Girl in a jacket digital art" width="535" height="600">
-</div>
-  </div>
+    <script type="text/javascript">
+      //thank you @frumbert for this
+      message = "thanks for finding me?! ✿ ";
+      function step() {
+        message = message.substr(1) + message.substr(0,1);
+        document.title = message.substr(0,15);
+      }
+    </script>
   </body>
 </html>
