@@ -125,7 +125,7 @@ function addLine() {
   } else if (lineCount === 4) {
     createPopup("She must really love learning.", lineCount);
   } else if (lineCount === 5) {
-    createPopup("You can put her on the frontlines of defending girls with an awkward, weird, or dorky origin story. She, too, was co-parented by the internet.", lineCount);
+    createPopup("She holds the softest spot in her heart for girls with an awkward, weird, or dorky backstory as she, too, was co-parented by the internet.", lineCount);
   } else if (lineCount === 6) {
     createPopup("She is hoping that you're enjoying this on a big screen.", lineCount);
   } else if (lineCount === 7) {
