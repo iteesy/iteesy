@@ -208,6 +208,29 @@ function stopMonitorVideo() {
     monitorScreen.style.background = 'radial-gradient(ellipse at center, rgba(80,180,255,0.10) 60%, rgba(0,0,0,0.18) 100%), #2233aa';
 }
 
+function showMonitorImage(imageSrc) {
+    monitorScreen.innerHTML = '';
+    monitorScreen.style.background = 'radial-gradient(ellipse at center, rgba(80,180,255,0.10) 60%, rgba(0,0,0,0.18) 100%), #2233aa';
+    
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.style.position = 'absolute';
+    img.style.top = '0';
+    img.style.left = '0';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'fill';
+    img.style.borderRadius = '8px';
+    img.style.zIndex = '2';
+    
+    monitorScreen.appendChild(img);
+}
+
+function hideMonitorImage() {
+    monitorScreen.innerHTML = originalContent;
+    monitorScreen.style.background = 'radial-gradient(ellipse at center, rgba(80,180,255,0.10) 60%, rgba(0,0,0,0.18) 100%), #2233aa';
+}
+
 const sfpcDll = document.getElementById('sfpc-dll');
 sfpcDll.addEventListener('mouseenter', () => {
     playMonitorVideo('videos/weonceexistedhere.mp4');
@@ -242,4 +265,12 @@ if (kiloMV) {
     playMonitorVideo('videos/kilo-crisis.mp4');
   });
   kiloMV.addEventListener('mouseleave', stopMonitorVideo);
+}
+
+const alay = document.getElementById('alay');
+if (alay) {
+  alay.addEventListener('mouseenter', () => {
+    showMonitorImage('photos/alay4.jpeg'); 
+  });
+  alay.addEventListener('mouseleave', hideMonitorImage); 
 }

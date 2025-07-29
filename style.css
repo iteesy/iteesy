@@ -741,27 +741,60 @@ button {
   flex-shrink: 0;
 }
 
-/* Mobile styles for case studies */
 @media (max-width: 768px) {
+
+  .header-container {
+    padding: 0 20px 20px 20px !important; 
+    background: none !important;
+    backdrop-filter: blur(4px);
+    overflow: visible;
+  }
+
+  h1 {
+    white-space: nowrap;
+    overflow: visible;
+    filter: drop-shadow(0 0 5px #FFB7F0) drop-shadow(0 0 4px #FF5EDD);
+    padding: 10px 0 0 0;
+    margin: 0;
+    text-align: left !important;
+  }
+
+
+  .projects {
+    padding-left: 0px !important; 
+    padding-right: 0px !important;
+    overflow: hidden; 
+  }
+  
+  .project-list {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0; /* Align to projects container */
+    overflow: hidden;
+  }
+
+  /* Mobile styles for case studies */
+
   .case-study-page .bio {
-    display: none; 
+    display: none !important;
+  }
+  
+  .case-study-page .intro {
+    flex-direction: column;
+    justify-content: flex-start; 
+    height: 100vh;
+    padding: 0;
+  }
   
   .case-study-page .case-study {
     max-width: 100%;
     flex-grow: 1;
-    height: 100%;
+    height: 100vh; /* Take full height */
     position: relative;
     padding-left: 20px;
     padding-right: 20px;
-  }
-  
-  .project-gallery {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .project-gallery img {
-    max-width: 100%;
-    height: auto;
+    padding-top: 20px; /* Add some top padding */
   }
 }
