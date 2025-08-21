@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRAIN ROT HOURS!!!</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #333;
+            font-family: 'Arial Narrow', Arial, sans-serif, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .flash-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        h1 {
+            position: absolute;
+            font-size: 8rem;
+            text-align: center;
+            margin: 0;
+            opacity: 0;
+            color: #81ff47;
+            text-shadow: 0 0 30px #81ff47;
+            white-space: nowrap;
+        }
+        
+        h1.active {
+            opacity: 1;
+            animation: seizureFlash 0.1s infinite;
+        }
+        
+        @keyframes seizureFlash {
+            0% { opacity: 1; transform: scale(1); }
+            25% { opacity: 0; transform: scale(1.1); }
+            50% { opacity: 1; transform: scale(0.9); }
+            75% { opacity: 0; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        button {
+            background-color: white;
+            color: #4CAF50;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-family: 'Arial Narrow', Arial, sans-serif, sans-serif;
+            margin-top: 50px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 4rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flash-container">
+        <h1 class="flash-1">dubai chocolate</h1>
+        <h1 class="flash-2">24k gold labubu</h1>
+        <h1 class="flash-3">love island</h1>
+        <h1 class="flash-4">matcha</h1>
+        <h1 class="flash-5">performative male</h1>
+        <h1 class="flash-6">benson boone crumbl</h1>
+    </div>
+    
+    <button onclick="alert('This action cannot be undone.')">give me a lobotomy</button>
+
+    <script>
+        const headings = document.querySelectorAll('h1');
+        let currentIndex = 0;
+        
+        function flashNext() {
+            headings.forEach(h => h.classList.remove('active'));
+            
+            headings[currentIndex].classList.add('active');
+            
+            currentIndex = (currentIndex + 1) % headings.length;
+        }
+        
+        flashNext();
+        
+        setInterval(flashNext, 800);
+    </script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!-- hey inspector!
+ HTML piece on the peculiar yet valid attachment people will have with inanimate items 
+ for HTTPoetics. Slightly inspired by the ‘Thank you for changing my life’ meme.-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>the thing</title>
+    <link rel="icon" type="image/x-icon" href="/girl.png">
+    <link rel="icon" href="/girl.png" type="image/x-icon">
+    
+    <style>
+        html, body {
+            width: 6000px;
+            height: 100vh;
+            margin-top: 0px;
+            padding: 0;
+            background-color: #FFF9E0;
+        }
+
+        .time {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        ul {
+            list-style-type: none
+        }
+
+        .pic-line-vertical {
+            padding: 50px;
+            margin: 0px;
+        }
+
+        .girl {
+            width: 180px;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        .thanks {
+            font-family: Arial, Helvetica, sans-serif;
+            transform: scaley(1.2);
+            margin: 0 auto;
+        }
+
+        .tile {
+            margin: 26px;
+            font-family: Arial, Helvetica, sans-serif;
+            transform: scaley(1.2);
+            padding: 40px;
+            border: 1px solid black;
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ------- TILES ------- */
+
+        .meme {
+            display: flex;
+            width: fit-content;
+        }
+
+        .fav {
+            display: flex;
+            position: absolute;
+            top: 500px; left: 460px;
+            width: fit-content;
+        }  
+
+        .hello {
+            display: flex;
+            position: absolute;
+            top: 90px; left: 720px;
+            width: fit-content;
+        }
+
+        .sweet {
+            display: flex;
+            position: absolute;
+            top: 8px; left: 1400px;
+            width: fit-content;
+        }  
+
+        .feel {
+            display: flex;
+            position: absolute;
+            top: 540px; left: 1800px;
+            width: fit-content;
+        }  
+
+        .schedule {
+            display: flex;
+            position: absolute;
+            top: 80px; left: 2400px;
+            width: fit-content;
+        }  
+
+        .time-management {
+            display: flex;
+            position: absolute;
+            top: 400px; left: 3000px;
+            width: fit-content;
+        }  
+
+        .question {
+            display: flex;
+            position: absolute;
+            top: 220px; left: 3700px;
+            width: fit-content;
+        }  
+
+        .overshare {
+            display: flex;
+            position: absolute;
+            top: 520px; left: 4300px;
+            width: fit-content;
+        }  
+
+        .listening {
+            display: flex;
+            position: absolute;
+            top: 220px; left: 5200px;
+            width: fit-content;
+        }  
+    </style>
+  </head>
+  <body>
+    <div class = "time">
+        <p id=yay>
+            how does this work?
+           </p>
+        <script>
+            yay.textContent = "🌊 " + Date();
+         </script>
+    </div>
+
+    <div class="meme">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <p>thank you for changing my life</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="hello">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <p>hello?????? r u there</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="fav">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <p>you are my favorite thing<br>in the whole wide world</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="sweet">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <p>may our sweet moments grant us more happy days</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="feel">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <p>you make me feel so </p><select name="cars" id="cars">
+                <option value="ambivalent">ambivalent</option>
+                <option value="colorful">colorful</option>
+                <option value="congenial">congenial</option>
+                <option value="nebulous">nebulous</option>
+                <option value="curious">curious</option>
+                <option value="pernicious">pernicious</option>
+                <option value="sanguine">sanguine</option>
+                <option value="vexed">vexed</option>
+
+              </select>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="schedule">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <br>
+            <ul>
+                <li>07:00 💤</li>
+                <li>08:00 🪥</li>
+                <li>09:00 👩🏻‍💻</li>
+                <li>10:00 👩🏻‍💻</li>
+                <li>11:00 👩🏻‍💻</li>
+                <li>12:00 🍜</li>
+                <li>13:00 👩🏻‍💻</li>
+                <li>14:00 👩🏻‍💻</li>
+                <li>15:00 👩🏻‍💻</li>
+                <li>16:00 🚶</li>
+                <li>17:00 👩🏻‍💻</li>
+                <li>18:00 👩🏻‍💻</li>
+                <li>19:00 👩🏻‍💻</li>
+                <li>20:00 📚</li>
+                <li>21:00 🚿</li>
+                <li>22:00 💤</li>
+              </ul>
+                      </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="time-management">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+        <div class = "thanks">
+            <p>if my time management sucks is that because of capitalist language to obey a 9-5 so that time feels finite and time to ourselves is meant to be luxury or — </p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="question">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+
+        <div class = "thanks">
+            <p>have people actually slipped on a banana peel? why is that even a thing? like banana peels aren't slippery but i don't want to search it up because what if it's rooted in something misogynistic, racist, colonialism, violence like that wouldn't be surprising anymore but what if —</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="overshare">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+
+        <div class = "thanks">
+            <p>and yeah</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <div class="listening">
+        <div class = "pic-line-vertical">
+        <img class="girl" src="/photos/girl.png"></img>
+
+        <div class = "thanks">
+            <p>thank you for listening</p>
+        </div>
+        </div>  
+
+        <div class = "tile">
+            <p class = "thing">thing</p>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
