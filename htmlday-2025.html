@@ -5,111 +5,271 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BRAIN ROT HOURS!!!</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bungee+Shade&family=Russo+One&family=Orbitron:wght@900&family=Fredoka+One&family=Press+Start+2P&display=swap');
+        
         body {
-            background-color: #000;
-            color: #333;
-            font-family: 'Arial Narrow', Arial, sans-serif, sans-serif;
+            background: #000;
             margin: 0;
             padding: 0;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
             overflow: hidden;
+            cursor: none;
+            font-family: 'Orbitron', monospace;
         }
         
-        .flash-container {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        h1 {
+        .stamp {
             position: absolute;
-            font-size: 8rem;
-            text-align: center;
-            margin: 0;
-            opacity: 0;
-            color: #81ff47;
-            text-shadow: 0 0 30px #81ff47;
+            font-size: 3rem;
+            font-weight: 900;
+            pointer-events: none;
             white-space: nowrap;
+            transform-origin: center;
+            z-index: 1000;
+            text-shadow: 
+                0 0 20px currentColor,
+                0 0 40px currentColor,
+                0 0 60px currentColor,
+                0 0 80px currentColor;
+            animation: stampLife 8s ease-out forwards;
         }
         
-        h1.active {
-            opacity: 1;
-            animation: seizureFlash 0.1s infinite;
-        }
-        
-        @keyframes seizureFlash {
-            0% { opacity: 1; transform: scale(1); }
-            25% { opacity: 0; transform: scale(1.1); }
-            50% { opacity: 1; transform: scale(0.9); }
-            75% { opacity: 0; transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        
-        button {
-            background-color: white;
-            color: #4CAF50;
-            padding: 15px 30px;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-family: 'Arial Narrow', Arial, sans-serif, sans-serif;
-            margin-top: 50px;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-        
-        button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-        }
-        
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 4rem;
+        @keyframes stampLife {
+            0% { 
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            10% { 
+                transform: scale(1.2) rotate(180deg);
+            }
+            20% { 
+                transform: scale(1) rotate(360deg);
+            }
+            30% {
+                transform: scale(1.1) rotate(540deg) skewX(10deg);
+            }
+            40% {
+                transform: scale(0.9) rotate(720deg) skewX(-15deg);
+            }
+            50% {
+                transform: scale(1.05) rotate(900deg) skewX(5deg);
+            }
+            60% {
+                transform: scale(0.95) rotate(1080deg) skewX(-8deg);
+            }
+            70% {
+                transform: scale(1.02) rotate(1260deg) skewX(3deg);
+            }
+            80% {
+                transform: scale(0.98) rotate(1440deg) skewX(0deg);
+                opacity: 1;
+            }
+            100% { 
+                opacity: 0;
+                transform: scale(0.5) rotate(1800deg) skewX(0deg);
             }
         }
         
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2.5rem;
-            }
+        .stamp.font-1 { font-family: 'Black Ops One', cursive; text-transform: uppercase; }
+        .stamp.font-2 { font-family: 'Bungee Shade', cursive; text-transform: uppercase; }
+        .stamp.font-3 { font-family: 'Russo One', sans-serif; text-transform: uppercase; font-weight: 400; letter-spacing: 1px; }
+        .stamp.font-4 { font-family: 'Press Start 2P', cursive; font-size: 2rem !important; }
+        .stamp.font-5 { font-family: 'Fredoka One', cursive; text-transform: lowercase; }
+        .stamp.font-6 { font-family: 'Orbitron', monospace; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .stamp.morph-1 {
+            animation: stampLife 8s ease-out forwards, morph1 2s infinite;
         }
+        
+        .stamp.morph-2 {
+            animation: stampLife 8s ease-out forwards, morph2 2s infinite;
+        }
+        
+        .stamp.morph-3 {
+            animation: stampLife 8s ease-out forwards, morph3 2s infinite;
+        }
+        
+        @keyframes morph1 {
+            0%, 100% { transform: scaleY(1) skewX(0deg); }
+            25% { transform: scaleY(1.3) skewX(5deg); }
+            50% { transform: scaleY(0.7) skewX(-10deg); }
+            75% { transform: scaleY(1.1) skewX(3deg); }
+        }
+        
+        @keyframes morph2 {
+            0%, 100% { transform: scaleX(1) rotate(0deg); }
+            33% { transform: scaleX(1.4) rotate(2deg); }
+            66% { transform: scaleX(0.8) rotate(-3deg); }
+        }
+        
+        @keyframes morph3 {
+            0%, 100% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg); }
+            25% { transform: perspective(1000px) rotateX(15deg) rotateY(5deg); }
+            50% { transform: perspective(1000px) rotateX(-10deg) rotateY(-8deg); }
+            75% { transform: perspective(1000px) rotateX(5deg) rotateY(3deg); }
+        }
+        
+        .glitch-overlay {
+            position: relative;
+        }
+        
+        .glitch-overlay::before,
+        .glitch-overlay::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+        }
+        
+        .glitch-overlay::before {
+            animation: glitchRed 1.5s infinite;
+            color: #ff0040;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        }
+        
+        .glitch-overlay::after {
+            animation: glitchBlue 1.2s infinite;
+            color: #0080ff;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+        }
+        
+        @keyframes glitchRed {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-2px); }
+            40% { transform: translateX(2px); }
+            60% { transform: translateX(-1px); }
+            80% { transform: translateX(1px); }
+        }
+        
+        @keyframes glitchBlue {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(2px); }
+            50% { transform: translateX(-2px); }
+            75% { transform: translateX(1px); }
+        }
+        
+        /* Rainbow color classes */
+        .color-0 { color: #ff0000; } /* Red */
+        .color-1 { color: #ff8000; } /* Orange */
+        .color-2 { color: #ffff00; } /* Yellow */
+        .color-3 { color: #80ff00; } /* Lime */
+        .color-4 { color: #00ff00; } /* Green */
+        .color-5 { color: #00ff80; } /* Spring Green */
+        .color-6 { color: #00ffff; } /* Cyan */
+        .color-7 { color: #0080ff; } /* Sky Blue */
+        .color-8 { color: #0000ff; } /* Blue */
+        .color-9 { color: #8000ff; } /* Purple */
+        .color-10 { color: #ff00ff; } /* Magenta */
+        .color-11 { color: #ff0080; } /* Hot Pink */
     </style>
 </head>
 <body>
-    <div class="flash-container">
-        <h1 class="flash-1">dubai chocolate</h1>
-        <h1 class="flash-2">24k gold labubu</h1>
-        <h1 class="flash-3">love island</h1>
-        <h1 class="flash-4">matcha</h1>
-        <h1 class="flash-5">performative male</h1>
-        <h1 class="flash-6">benson boone crumbl</h1>
-    </div>
-    
-    <button onclick="alert('This action cannot be undone.')">give me a lobotomy</button>
-
     <script>
-        const headings = document.querySelectorAll('h1');
-        let currentIndex = 0;
+        const phrases = [
+            'dubai chocolate',
+            '24k gold labubu', 
+            'love island',
+            'i\'m a mommy',
+            'mamacita?',
+            'performative male',
+            'benson boone crumbl',
+            'team conrad',
+            'GNARLY',
+            'katseye',
+            'jet2 holiday',
+            'tsitp',
+            'wired earbuds',
+            'matcha'
+        ];
         
-        function flashNext() {
-            headings.forEach(h => h.classList.remove('active'));
+        let mouseX = 0;
+        let mouseY = 0;
+        let lastStampTime = 0;
+        let stampCount = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
             
-            headings[currentIndex].classList.add('active');
+            const now = Date.now();
+            if (now - lastStampTime > 100) { // Throttle to every 100ms
+                createStamp(mouseX, mouseY);
+                lastStampTime = now;
+            }
+        });
+        
+        function createStamp(x, y) {
+            const stamp = document.createElement('div');
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
             
-            currentIndex = (currentIndex + 1) % headings.length;
+            stamp.className = 'stamp';
+            stamp.textContent = phrase;
+            stamp.setAttribute('data-text', phrase);
+            
+            // Random font
+            const fontClass = 'font-' + (Math.floor(Math.random() * 6) + 1);
+            stamp.classList.add(fontClass);
+            
+            // Random morph animation
+            const morphClass = 'morph-' + (Math.floor(Math.random() * 3) + 1);
+            stamp.classList.add(morphClass);
+            
+            // Random rainbow color
+            const colorClass = 'color-' + Math.floor(Math.random() * 12);
+            stamp.classList.add(colorClass);
+            
+            // Add glitch effect occasionally
+            if (Math.random() < 0.3) {
+                stamp.classList.add('glitch-overlay');
+            }
+            
+            // Position the stamp
+            stamp.style.left = (x - 100) + 'px'; // Offset to center roughly
+            stamp.style.top = (y - 25) + 'px';
+            
+            // Random size variation
+            const scale = 0.7 + Math.random() * 0.6; // 0.7 to 1.3
+            stamp.style.fontSize = (3 * scale) + 'rem';
+            
+            // Random initial rotation
+            const initialRotation = Math.random() * 360;
+            stamp.style.transform = `rotate(${initialRotation}deg) scale(0)`;
+            
+            document.body.appendChild(stamp);
+            stampCount++;
+            
+            // Remove the stamp after animation completes
+            setTimeout(() => {
+                if (stamp.parentNode) {
+                    stamp.parentNode.removeChild(stamp);
+                }
+            }, 8000);
+            
+            // Clean up excess stamps to prevent memory issues
+            if (stampCount > 50) {
+                const oldStamps = document.querySelectorAll('.stamp');
+                for (let i = 0; i < 10 && i < oldStamps.length; i++) {
+                    if (oldStamps[i].parentNode) {
+                        oldStamps[i].parentNode.removeChild(oldStamps[i]);
+                    }
+                }
+                stampCount -= 10;
+            }
         }
         
-        flashNext();
-        
-        setInterval(flashNext, 800);
+        // Create some initial stamps for effect
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createStamp(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight
+                    );
+                }, i * 200);
+            }
+        }, 500);
     </script>
 </body>
 </html>
