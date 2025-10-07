@@ -18,6 +18,16 @@
             justify-content: center;
         }
         
+        .youtube-player {
+            position: fixed;
+            top: -1000px;
+            left: -1000px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
         .screen {
             width: 600px;
             height: 225px;
@@ -27,6 +37,7 @@
             background-color: rgba(255, 255, 255, 0.7);
             padding: 15px;
             box-sizing: border-box;
+            margin-top: -150px;
         }
         
         .line {
@@ -39,6 +50,15 @@
     </style>
 </head>
 <body>
+    <iframe 
+        class="youtube-player"
+        width="1" 
+        height="1" 
+        src="https://www.youtube.com/embed/oMEHsHDgF_g?si=3nMC5I92ishz3ltF&autoplay=1" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
     <div class="screen"></div>
     <script>
         const phrases = [
@@ -55,7 +75,9 @@
             'jet2 holiday',
             'tsitp',
             'wired earbuds',
-            'matcha'
+            'matcha',
+            'better in denim.',
+
         ];
         
         const screen = document.querySelector('.screen');
@@ -65,7 +87,7 @@
         
         function writeLine() {
             if (currentLine >= totalLines) {
-                // reset
+                // Clear and start over
                 screen.innerHTML = '';
                 currentLine = 0;
                 setTimeout(writeLine, 1000);
@@ -77,7 +99,6 @@
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
             line.textContent = phrase;
             
-            //columns
             const column = Math.floor(currentLine / linesPerColumn);
             const row = currentLine % linesPerColumn;
             
