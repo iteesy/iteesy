@@ -65,7 +65,7 @@
         
         function writeLine() {
             if (currentLine >= totalLines) {
-                // Clear and start over
+                // reset
                 screen.innerHTML = '';
                 currentLine = 0;
                 setTimeout(writeLine, 1000);
@@ -77,7 +77,7 @@
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
             line.textContent = phrase;
             
-            // Position in columns
+            //columns
             const column = Math.floor(currentLine / linesPerColumn);
             const row = currentLine % linesPerColumn;
             
@@ -88,11 +88,9 @@
             screen.appendChild(line);
             currentLine++;
             
-            // Write next line after a delay
             setTimeout(writeLine, 150);
         }
         
-        // Start writing
         setTimeout(writeLine, 500);
     </script>
 </body>
