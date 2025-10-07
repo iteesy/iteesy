@@ -28,6 +28,20 @@
             pointer-events: none;
         }
         
+        .play-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1000;
+        }
+        
         .screen {
             width: 600px;
             height: 225px;
@@ -37,7 +51,7 @@
             background-color: rgba(255, 255, 255, 0.7);
             padding: 15px;
             box-sizing: border-box;
-            margin-top: -150px;
+            margin-top: -100px;
         }
         
         .line {
@@ -50,17 +64,26 @@
     </style>
 </head>
 <body>
+    <button class="play-button" id="playBtn">play meeeeeeeeeeeee ♫⋆｡♪ ₊˚♬ﾟ.</button>
     <iframe 
+        id="ytplayer"
         class="youtube-player"
         width="1" 
         height="1" 
-        src="https://www.youtube.com/embed/oMEHsHDgF_g?si=3nMC5I92ishz3ltF&autoplay=1" 
+        src="https://www.youtube.com/embed/oMEHsHDgF_g?enablejsapi=1" 
         frameborder="0" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen>
     </iframe>
     <div class="screen"></div>
     <script>
+        // YouTube player control
+        document.getElementById('playBtn').addEventListener('click', function() {
+            const iframe = document.getElementById('ytplayer');
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            this.textContent = 'weeeeeeeeeeeeeeeeeeeeee ♫⋆｡♪ ₊˚♬';
+        });
+        
         const phrases = [
             'dubai chocolate',
             '24k gold labubu', 
@@ -75,9 +98,7 @@
             'jet2 holiday',
             'tsitp',
             'wired earbuds',
-            'matcha',
-            'better in denim.',
-
+            'matcha'
         ];
         
         const screen = document.querySelector('.screen');
@@ -87,7 +108,6 @@
         
         function writeLine() {
             if (currentLine >= totalLines) {
-                // Clear and start over
                 screen.innerHTML = '';
                 currentLine = 0;
                 setTimeout(writeLine, 1000);
@@ -99,6 +119,7 @@
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
             line.textContent = phrase;
             
+            // Position in columns
             const column = Math.floor(currentLine / linesPerColumn);
             const row = currentLine % linesPerColumn;
             
