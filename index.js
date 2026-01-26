@@ -133,7 +133,7 @@ function addLine() {
   } else if (lineCount === 8) {
     createPopup("You clicked again but you didn't answer.", lineCount);
   } else if (lineCount === 9) {
-    createPopup("Do you think pigeons have opinions about architecture like if they prefer brutalist buildings or-", lineCount);
+    createPopup("Right now, she's reading All the Lovers in the Night by Mieko Kawakami. She's starting to reconsider that maybe she prefers slow burn through film rather than literature. Maybe.", lineCount);
   } else if (lineCount === 10) {
     createPopup('<img src="photos/me_hehe.png" id="me-hehe" /><p id="hi">Bye! See you in the next update.</p>', lineCount);
     addLineButton.remove();

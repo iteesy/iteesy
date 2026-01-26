@@ -391,7 +391,7 @@ a {
 
 /* Randomized positions, fall durations, and margins */
 .project-name:nth-child(1) { left: 3%; animation-duration: 20s; animation-delay: 0s; }
-.project-name:nth-child(2) { left: 13%; animation-duration: 23s; animation-delay: 3s; }
+.project-name:nth-child(2) { left: 13%; animation-duration: 23s; animation-delay: 1s; }
 .project-name:nth-child(3) { left: 28%; animation-duration: 24s; animation-delay: 6s; }
 .project-name:nth-child(4) { left: 42%; animation-duration: 27s; animation-delay: 10s; }
 .project-name:nth-child(5) { left: 59%; animation-duration: 31s; animation-delay: 6s; }
