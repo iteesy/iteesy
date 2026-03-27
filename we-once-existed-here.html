@@ -1,4 +1,5 @@
 <html>
+  <!-- Updated March 27, 2026 to replace Glitch URLs - sorry to those who missed out! -->
   <!-- Hello inspector! :) This is a handmade site. By opening this, maybe you wanted to know my process, if I really did this without a web builder, or maybe you're an eng and want to critique the DOM. Whatever reason, I think it's cool you're interested in checking this far. -->
   <!-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⡇⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠀⢀⣀⣀⣀⣀⠀⠀⠀⢴⣴⡶⠶⠾⠞⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⡄⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠇⠀⠀⠀
@@ -152,6 +153,26 @@ a:hover {
   background: linear-gradient(#b6b6b6, #f3f3f3);
 }
 
+#restart {
+  position: fixed;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  background: linear-gradient(#f3f3f3, #b6b6b6);
+  border: 1px solid #afaeae;
+  border-radius: 2px;
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+  font-family: sans-serif;
+  z-index: 999;
+}
+
+#restart:active {
+  background: linear-gradient(#b6b6b6, #f3f3f3);
+}
+
 #controls {
   position: fixed; /* Fix the position relative to the viewport */
     bottom:7;
@@ -253,13 +274,14 @@ a:hover {
     <!-- next --> 
 
   <button id="next" style="display: none">Next</button>
+  <button id="restart" style="display: none">Restart</button>
     <!-- music player --> 
     <div id="" class="playercontainer" style="display: none">
       <div id="controls" class="controls">
         <button id="playpause-btn" onclick="playPauseTrack()">▶</button>
       </div>
   </div>
-  <audio id="mu" src="https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/Id_Like_To_Walk_Around_in_Your_Mind.mp3?v=1741559354044" style="display: hidden;"></audio>
+  <audio id="mu" src="photos/dll-2024/Id_Like_To_Walk_Around_in_Your_Mind.mp3" style="display: hidden;"></audio>
 
 
   <div class="intro">
@@ -347,6 +369,7 @@ $("#start").click(function () {
   $("#slide-container").show(); // Show slide container
   showSlide(currentSlide); // Show first slide
   $("#next").show(); // Show next button
+  $("#restart").hide(); // Hide restart button until final slide
     $(".iframe").show(); // Show iframe button
   $(".playercontainer").show(); 
   // AUTOPLAY MUSIC
@@ -360,7 +383,7 @@ $("#start").click(function () {
 //Music player
 const playlist = new Set(); 
 const song1 = {
-  src: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/Id_Like_To_Walk_Around_in_Your_Mind.mp3?v=1741559354044",
+  src: "photos/dll-2024/Id_Like_To_Walk_Around_in_Your_Mind.mp3",
   title: "I'd Like To Walk Around in Your Mind",
   artist: "Vashti Bunyan",
 };
@@ -389,18 +412,18 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/99cent.png?v=1731626596973",
+        url: "photos/dll-2024/99cent.png",
         alt: "99 cent storefront",
         position: { top: "5%", left: "2%" },
       },
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/99cent-reddit.png?v=1731630126187",
+        url: "photos/dll-2024/99cent-reddit.png",
         alt: "99 cent mourning from a redditor",
 
         position: { top: "55%", left: "65%" },
       },
       /* Might be repetitive {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/99cent-permanently-closed.png?v=1731630436978",
+        url: "photos/dll-2024/99cent-permanently-closed.png",
         alt: "99 cent permanently closed in a google maps",
 
         position: { top: "60%", left: "50%" },
@@ -430,12 +453,12 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/orenchi%20closed.png?v=1731884739832",
+        url: "photos/dll-2024/orenchi%20closed.png",
         alt: "orenchi blurred signane",
         position: { top: "-1%", left: "68%" },
       },
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/orenchi%20sign.png?v=1731884946825",
+        url: "photos/dll-2024/orenchi%20sign.png",
         alt: "Sorry we're closed sign",
         position: { top: "65%", left: "8%" },
       },
@@ -464,7 +487,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/lake%20tahoe.png?v=1731879897119",
+        url: "photos/dll-2024/lake%20tahoe.png",
         position: { top: "35%", left: "15%" },
       },
     ],
@@ -491,7 +514,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/amcfullerton.png?v=1731886925128",
+        url: "photos/dll-2024/amcfullerton.png",
         alt: "AMC Fullerton entrance",
         position: { top: "42%", left: "14%" },
       },
@@ -519,12 +542,12 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/mercado-pre.png?v=1731890344287",
+        url: "photos/dll-2024/mercado-pre.png",
         alt: "Mercado González before built",
         position: { top: "22%", left: "14%" },
       },
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/mercado-post.png?v=1731890331945",
+        url: "photos/dll-2024/mercado-post.png",
         alt: "Mercado González after built",
         position: { top: "62%", left: "14%" },
       },
@@ -552,7 +575,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/coffeecode.png?v=1731891798527",
+        url: "photos/dll-2024/coffeecode.png",
         alt: "Coffee code cafe entrance",
         position: { top: "40%", left: "21%" },
       },
@@ -580,7 +603,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/packing%20district.png?v=1731910378256",
+        url: "photos/dll-2024/packing%20district.png",
         alt: "packing district",
         position: { top: "32%", left: "72%" },
       },
@@ -606,7 +629,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/hair%20salon.png?v=1731911612993",
+        url: "photos/dll-2024/hair%20salon.png",
         alt: "Hair Desire by Andy Salon",
         position: { top: "22%", left: "50%" },
       },
@@ -634,7 +657,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/toledo%20sc.png?v=1731955738046",
+        url: "photos/dll-2024/toledo%20sc.png",
         alt: "Driveway of a home leading to a window",
         position: { top: "6%", left: "80%" },
       },
@@ -658,7 +681,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/c9.png?v=1731957939987",
+        url: "photos/dll-2024/c9.png",
         alt: "Entrance to a college dorm building",
         position: { top: "20%", left: "0%" },
       },
@@ -683,7 +706,7 @@ const slides = [
   {
     photos: [
       {
-        url: "https://cdn.glitch.global/5b5c4f9b-7099-41ee-b944-cc052d76b915/sjstation.png?v=1731986491620",
+        url: "photos/dll-2024/sjstation.png",
         alt: "san jose train station entrance",
         position: { top: "42%", left: "40%" },
       },
@@ -768,19 +791,37 @@ function showSlide(index) {
 
 //Next button
 $("#next").click(function () {
-  // Go to next slide
-  currentSlide++;
-
-  // If last slide, remove the #next btton
-  if (currentSlide >= slides.length - 1) {
-    $("#next").remove();
-  }
-
-  // prevent looping back to the first slide
-  if (currentSlide < slides.length) {
+  // Go to next slide until the final one
+  if (currentSlide < slides.length - 1) {
+    currentSlide++;
     showSlide(currentSlide);
   }
 });
+
+//Restart button on final slide
+$("#restart").click(function () {
+  currentSlide = 0;
+  showSlide(currentSlide);
+  $("#restart").hide();
+  $("#next").show();
+});
+
+// Toggle Next/Restart visibility based on current slide
+function updateNavButtons() {
+  if (currentSlide >= slides.length - 1) {
+    $("#next").hide();
+    $("#restart").show();
+  } else {
+    $("#next").show();
+    $("#restart").hide();
+  }
+}
+
+const originalShowSlide = showSlide;
+showSlide = function (index) {
+  originalShowSlide(index);
+  updateNavButtons();
+};
 
 
 </script>
