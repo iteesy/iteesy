@@ -84,11 +84,15 @@ justify-content: space-between;
 }*/
 
 .intro {
-  margin-bottom: 24px;
-  text-align: center;
+  position: fixed;
+  inset: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .intro-text-wrapper {
@@ -274,7 +278,7 @@ a:hover {
     <!-- next --> 
 
   <button id="next" style="display: none">Next</button>
-  <button id="restart" style="display: none">Restart</button>
+  <button id="restart" style="display: none">Start over</button>
     <!-- music player --> 
     <div id="" class="playercontainer" style="display: none">
       <div id="controls" class="controls">
@@ -798,12 +802,9 @@ $("#next").click(function () {
   }
 });
 
-//Restart button on final slide
+// Start over: full reload of this page (intro + slideshow from the beginning)
 $("#restart").click(function () {
-  currentSlide = 0;
-  showSlide(currentSlide);
-  $("#restart").hide();
-  $("#next").show();
+  window.location.reload();
 });
 
 // Toggle Next/Restart visibility based on current slide
