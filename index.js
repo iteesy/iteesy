@@ -117,25 +117,23 @@ function createPopup(content, index) {
 
 function addLine() {
   if (lineCount === 1) {
-    createPopup("Reliving slow narratives of identity, girlhood, and temporality through a <a href='https://luckysoap.com/statements/handmadeweb.html' target='_blank'>handmade poetic web</a>. A homage to the internet's first generation of artists.", lineCount);
+    createPopup("She believes the internet can still be tender.", lineCount);
   } else if (lineCount === 2) {
-    createPopup("Dreams of creating agency towards a loving internet. A reminder that there is a real human behind technology.", lineCount);
+    createPopup("And she'll make these small sites to prove it.", lineCount);
   } else if (lineCount === 3) {
-    createPopup("Learned Human-Computer Interaction/AI at the University of California, Santa Cruz.<br><br>Unlearned at Engaging Education@UCSC.<br><br>Continued to unlearn at School for Poetic Computation, NYC.<br><br>Learned intensively at Creative Code Intensive @ Gray Area, SF.", lineCount);
+    createPopup("Tracing slow narratives of girlhood, memory, and digital self through a <a href='https://luckysoap.com/statements/handmadeweb.html' target='_blank'>handmade poetic web</a>.", lineCount);
   } else if (lineCount === 4) {
-    createPopup("She must really love learning.", lineCount);
+    createPopup("Come interact with her work in an immersive setting at <a href='https://grayarea.org/event/local-memory-soft-systems/' target='_blank'>./local_memory: soft systems</a> on April 17-19, 2026 at Gray Area, SF.", lineCount);
   } else if (lineCount === 5) {
-    createPopup("She holds the softest spot in her heart for girls with an awkward, weird, or dorky backstory as she, too, was co-parented by the internet.", lineCount);
+    createPopup("She is always in the middle of learning something she can't quite explain yet. Just wait.", lineCount);
   } else if (lineCount === 6) {
-    createPopup("She is hoping that you're enjoying this on a big screen.", lineCount);
+    createPopup("She is hoping you're on a big screen as she can't remember if this is very responsive.", lineCount);
   } else if (lineCount === 7) {
-    createPopup("At this point, she is curious about you. What brings you here? What are you hoping to find?", lineCount);
+    createPopup("Learned at: <br><br>AI/Human-Computer Interaction B.S. @ UCSC <br><br> School of Poetic Computation, NYC: Digital Love Languages (2023) <br><br> Creative Code Intensive @ Gray Area, SF (2025)", lineCount);
   } else if (lineCount === 8) {
-    createPopup("You clicked again but you didn't answer.", lineCount);
+    createPopup("After all these clicks, at this point, she's a little curious about you too.", lineCount);
   } else if (lineCount === 9) {
-    createPopup("Right now, she's reading All the Lovers in the Night by Mieko Kawakami. She's starting to reconsider that maybe she prefers slow burn through film rather than literature. Maybe.", lineCount);
-  } else if (lineCount === 10) {
-    createPopup('<img src="photos/me_hehe.png" id="me-hehe" /><p id="hi">Bye! See you in the next update.</p>', lineCount);
+    createPopup('<p id="hi">Okay, that\'s all for now. See you in the next update:) <br><br>Bye!</p><img src="photos/me_hehe.png" id="me-hehe" />', lineCount);
     addLineButton.remove();
   }
   lineCount++;
