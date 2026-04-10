@@ -30,9 +30,14 @@ font-display:auto;font-style:italic;font-weight:700;font-stretch:normal;
 }
 
 
+html {
+  height: 100%;
+}
+
 body {
   background: white;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   align-items: center;
   padding: 0px;
   margin: 0px;
@@ -85,12 +90,15 @@ h1 {
 }
 
 .intro {
-  position: relative; 
+  position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  justify-content: center;
-  
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  box-sizing: border-box;
 }
 
 /* Monitor styles */
@@ -276,12 +284,15 @@ h1 {
 
 .projects {
   position: relative;
-  max-width: 75vw;
-  flex-basis: 75%;
+  flex: 0 0 auto;
+  width: min(75vw, 1400px);
   height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   padding-left: 32px;
   padding-right: 0px;
+  box-sizing: border-box;
   background-image: radial-gradient(ellipse at 50% 50%, #FFDFF7 0%, #FFDFF7 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
 }
 
@@ -316,14 +327,17 @@ a {
 }
 
 .bio {
-  flex-grow: 0;
-  flex-basis: 9%;
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
   padding-left: 0;
   padding-right: 0;
-  background-image: url('/photos/ocean.jpg');
+  box-sizing: border-box;
+  background-image: url("photos/ocean.jpg");
   background-size: cover;
-
+  background-position: center;
 }
 
 .bio-text {
@@ -583,8 +597,10 @@ button {
   }
 
   .projects {
+    flex: 1 1 auto;
+    width: 100%;
     max-width: 100%;
-    flex-grow: 1;
+    min-height: 0;
     height: 91%;
     position: relative;
   }
