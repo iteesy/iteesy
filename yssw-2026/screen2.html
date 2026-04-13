@@ -1,0 +1,3807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>You Speak So Well — Screen 2</title>
+  <style>
+  html { font-size: clamp(14px, 0.9vw, 18px); }
+  body { background: #EDE4CD; margin: 0; overflow-x: hidden; }
+  ::-webkit-scrollbar { display: none; }
+  #crt-bloom {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    background-color: rgba(180, 140, 60, 0.06);
+    background-image:
+      radial-gradient(ellipse 80% 70% at 50% 50%, rgba(180, 140, 60, 0.40) 0%, rgba(180, 140, 60, 0.18) 45%, transparent 85%),
+      radial-gradient(ellipse 120% 110% at 50% 50%, rgba(176, 138, 24, 0.22) 0%, transparent 65%);
+    mix-blend-mode: overlay;
+  }
+  .container { width: 100vw; margin: 0 auto; }
+  .row { display: flex; gap: clamp(1px, 0.08vw, 2px); padding: clamp(0px, 0.05vw, 1px) 0; justify-content: center; flex-wrap: nowrap; }
+  .bar-xs { width: clamp(8px, 0.62vw, 12px); height: clamp(18px, 2.0vh, 22px); flex-shrink: 0; overflow: hidden; }
+  .bar-s  { width: clamp(12px, 1.0vw, 20px); height: clamp(18px, 2.0vh, 22px); flex-shrink: 0; overflow: hidden; }
+  .bar-m  { width: clamp(20px, 2.0vw, 40px); height: clamp(18px, 2.0vh, 22px); flex-shrink: 0; overflow: hidden; }
+  .bar-l  { width: clamp(32px, 3.2vw, 64px); height: clamp(18px, 2.0vh, 22px); flex-shrink: 0; overflow: hidden; }
+  .transparent { background: transparent; }
+
+  /* ── Opaque bar base ── */
+  .opaque {
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    isolation: isolate;
+    border-radius: clamp(1px, 0.06vw, 1.5px);
+    background-origin: border-box;
+    background-clip: border-box;
+    background-position: center center;
+    background-repeat: no-repeat;
+    will-change: transform, background-position, filter;
+    transition: transform 110ms linear, background-position 110ms linear, filter 110ms linear;
+    transform: translate3d(calc(var(--tx, 0px) + var(--x, 0px)), var(--y, 0px), 0) rotate(var(--r, 0deg));
+  }
+
+  /* ROOTS — fuller fill, warmer melancholy */
+    .opaque.state-root {
+      background-color: #5A3A14;
+      background-image:
+        url('textures/soft edge 1.png'),
+        url('textures/soft edge 2.png'),
+        url('textures/soft edge 3.png');
+      background-blend-mode: soft-light, lighten;
+      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+      opacity: 1;
+      box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.18);
+      filter: sepia(0.14) saturate(0.95) contrast(1.05) brightness(0.98);
+    }
+
+  /* GLITTER — soft shimmer on bar-xs falling bars */
+  @keyframes glitter {
+    0%   { opacity: 0.10; }
+    10%  { opacity: 0.60; }
+    20%  { opacity: 0.22; }
+    30%  { opacity: 0.60; }
+    45%  { opacity: 0.28; }
+    60%  { opacity: 0.60; }
+    75%  { opacity: 0.20; }
+    90%  { opacity: 0.60; }
+    100% { opacity: 0.15; }
+  }
+
+  .bar-xs.opaque.state-falling {
+    animation: glitter 5.0s linear infinite;
+  }
+
+  /* FALLING — mid pressure, ink dragging */
+  .opaque.state-falling {
+    background-color: #7A5C35;
+    background-image:
+      url('textures/halftone dot.png'),
+      url('textures/grain.png');
+    background-blend-mode: overlay, normal;
+    background-size: 120px 120px, 80px 80px;
+    background-repeat: repeat, repeat;
+    opacity: 0.5;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+  }
+
+  /* ── Overlay effects ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .overlay-grain {
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    filter: url(#grain);
+    background: #ffffff;
+  }
+  .overlay-scanlines {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0vh,
+      transparent 0.2vh,
+      rgba(0,0,0,0.04) 0.2vh,
+      rgba(0,0,0,0.04) 0.4vh
+    );
+  }
+  .overlay-tint {
+    background: rgba(180, 130, 60, 0.04);
+  }
+
+  /* ── Ground layer ── */
+  .ground-layer {
+    position: fixed;
+    top: 3.5vh;
+    left: 0;
+    width: 100vw;
+    z-index: -10;
+  }
+
+  .ground-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(14px, 2.0vh, 24px);
+    background-repeat: repeat;
+    opacity: 0.14;
+    pointer-events: none;
+  }
+
+  .ground-line {
+    position: relative;
+    background: transparent;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.92rem;
+    line-height: 1.08rem;
+    color: #4A2E0A;
+    white-space: nowrap;
+    padding: 0 0.25rem;
+    letter-spacing: 0;
+  }
+
+  .ground-line-2 {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    line-height: 0.95rem;
+    color: #4A2E0A;
+    opacity: 0.25;
+    white-space: nowrap;
+    letter-spacing: 0;
+    background: transparent;
+  }
+
+  /* ── Wind animation — ASCII grass, Ghibli-style sway ── */
+  .blade {
+    display: inline-block;
+    transform-origin: bottom center;
+    will-change: transform;
+  }
+
+  .flat {
+    display: inline-block;
+    opacity: 0.7;
+  }
+
+  .words-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .word-bar {
+    position: absolute;
+    display: inline-block;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: clamp(0.72rem, 0.78vw, 0.98rem);
+    line-height: 1.08rem;
+    white-space: nowrap;
+    color: #4A2E0A;
+    background-color: #A68B5B;
+    background-image:
+      url('textures/halftone dot.png'),
+      url('textures/grain.png');
+    background-blend-mode: soft-light;
+    background-size: 120px 120px, 80px 80px;
+    background-repeat: repeat, repeat;
+    padding: 0 0.18rem;
+    border-radius: clamp(1px, 0.06vw, 1.5px);
+    opacity: 1;
+    overflow: hidden;
+    clip-path: inset(0 100% 0 0);
+    will-change: clip-path, opacity, transform, background-color, box-shadow, filter;
+    --tx: 0px;
+    transform: translate3d(calc(var(--tx, 0px) + var(--x, 0px)), var(--y, 0px), 0) rotate(var(--r, 0deg));
+    transition: opacity 240ms ease, transform 110ms linear, clip-path 240ms ease, background-color 240ms ease, box-shadow 240ms ease, filter 240ms linear;
+  }
+
+  .word-bar.is-active {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .word-bar.revealed {
+    background-color: #EDE4CD !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    clip-path: inset(0 0 0 0) !important;
+    opacity: 1 !important;
+    -webkit-text-stroke: 0.5px #4A2E0A;
+  }
+
+  .word-bar.source-hidden {
+    opacity: 0 !important;
+    clip-path: inset(0 100% 0 0) !important;
+  }
+</style>
+
+
+  <!-- SVG grain filter -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute">
+    <defs>
+      <filter id="grain" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise"/>
+      </filter>
+    </defs>
+  </svg>
+</head>
+<body>
+
+  <!-- Visual overlays — fixed, pointer-events: none, z-index: 10 -->
+  <div class="overlay overlay-grain"></div>
+  <div class="overlay overlay-scanlines"></div>
+  <div class="overlay overlay-tint"></div>
+
+  <!-- Ground layer — ASCII grass with wind-animated spans on every ~5th character -->
+  <div class="ground-layer" style="position:absolute; top:3.5vh; left:0; z-index:-10; width:100vw;">
+    <div class="ground-texture"></div>
+    <div class="ground-line">____<span class="wind-char">///</span>\___________<span class="wind-char">_</span>/<span class="wind-char">_</span>/I\___________<span class="wind-char">.</span>/<span class="wind-char">_</span>___<span class="wind-char">///</span>\____________/<span class="wind-char">_</span>/I\__________<span class="wind-char">_</span>.<span class="wind-char">/</span>____<span class="wind-char">///</span>\___________<span class="wind-char">_</span>/<span class="wind-char">_</span>/I\___________.<span class="wind-char">/</span>____<span class="wind-char">///</span>\____________/<span class="wind-char">_</span>/I\___________<span class="wind-char">///</span>\___________<span class="wind-char">_</span>/<span class="wind-char">_</span>/I\___________<span class="wind-char">.</span>/<span class="wind-char">_</span>___<span class="wind-char">///</span>\____________/<span class="wind-char">_</span>/I\__________<span class="wind-char">_</span>.<span class="wind-char">/</span>____<span class="wind-char">///</span>\___________<span class="wind-char">_</span>/<span class="wind-char">_</span>/I\___________.<span class="wind-char">/</span>____<span class="wind-char">///</span>\____________/<span class="wind-char">_</span>/I\_______</div>
+    <div class="ground-line-2"></div>
+  </div>
+
+
+<div class="container" style="position:relative; z-index:1;">
+
+  <!-- Row 1 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 2 -->
+   <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 3 -->
+   <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 4 -->
+    <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 5 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+  </div>
+
+  <!-- Row 6 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>    
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 7 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>    
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>    
+    <div class="bar-m opaque state-root"></div>    
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>    
+    <div class="bar-m opaque state-root"></div>    
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 8 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>  
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 9 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>  
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 10 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 11 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 12 -->
+  <div class="row">
+    <div class="bar-m transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+  </div>
+
+  <!-- Row 13 -->
+  <div class="row">
+    <div class="bar-m transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 14 -->
+  <div class="row">
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque"></div>
+    <div class="bar-m opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l transparent"></div>
+  </div>
+
+  <!-- Row 15 -->
+  <div class="row">
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-xs opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l opaque"></div>
+    <div class="bar-m opaque"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s transparent"></div>
+  </div>
+
+  <!-- Row 16 -->
+    <div class="row">
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-xs opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+     <div class="bar-m opaque state-root"></div>
+     <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+     <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l opaque"></div>
+    <div class="bar-m opaque"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s transparent"></div>
+  </div>
+
+  <!-- Row 17 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar- opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>    
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 18 -->
+  <div class="row">
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar- opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s transparent"></div>
+  </div>
+
+  <!-- Row 19 -->
+  <div class="row">
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 20 -->
+  <div class="row">
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+  </div>
+
+  <!-- Row 21 -->
+ <div class="row">
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+  </div>
+
+
+  <!-- Row 22 -->
+  <div class="row">
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 23 -->
+<div class="row">
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+</div>
+
+  <!-- Row 24 -->
+<div class="row">
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+</div>
+
+  <!-- Row 25 -->
+<div class="row">
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+</div>
+
+  <!-- Row 26 -->
+<div class="row">
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs transparent"></div>
+</div>
+
+  <!-- Row 27 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 28 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 29 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 30 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 31 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 32 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 33 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 34 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 35 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 36 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 37 -->
+<div class="row">
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-m opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-l opaque state-root"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s opaque state-root"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-xs transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-m transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+  <div class="bar-s transparent"></div>
+  <div class="bar-xs opaque state-falling"></div>
+</div>
+
+  <!-- Row 38 -->
+   <div class="row">
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>    
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+  </div>
+
+  <!-- Row 39 -->
+  <div class="row">
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>    
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+  </div>
+
+  <!-- Row 40 -->
+  <div class="row">
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+        <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+        <div class="bar-m opaque state-root"></div> 
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m transparent"></div>
+        <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+        <div class="bar-s opaque state-root"></div>
+        <div class="bar-xs opaque state-falling"></div>
+
+  </div>
+
+  <!-- Row 41 -->
+  <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>    
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>    
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>    
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 42 -->
+  <div class="row">
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+  </div>
+
+  <!-- Row 43 -->
+ <div class="row">
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+  </div>
+
+
+  <!-- Row 44 -->
+ <div class="row">
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+  </div>
+
+  <!-- Row 45 -->
+ <div class="row">
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-falling"></div>
+    <div class="bar-m opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+  </div>
+
+  <!-- Row 46 -->
+<div class="row">
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque"></div>
+    <div class="bar-xs opaque"></div>
+  </div>
+
+
+  <!-- Row 47 -->
+   <div class="row">
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+  </div>
+
+  <!-- Row 48 -->
+   <div class="row">
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+  </div>
+
+  <!-- Row 49 -->
+   <div class="row">
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-falling"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+  </div>
+
+  <div class="row">
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-s opaque state-falling"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-m opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-xs opaque state-falling"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs transparent"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-l opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-m transparent"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-m opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-s opaque state-root"></div>
+    <div class="bar-l transparent"></div>
+    <div class="bar-s opaque state-falling"></div>
+    <div class="bar-m opaque state-falling"></div>
+    <div class="bar-xs opaque state-root"></div>
+    <div class="bar-xs opaque state-root"></div>
+  </div>
+
+
+</div>
+<script>
+const groundLine = document.querySelector('.ground-line');
+
+const bladeOptions = [
+  '/', '\\', '/\\', '//', '\\\\', '/\\/', './', '/.'
+];
+
+const flatOptions = ['_', '_', '_', '_', '.', ' ', '_'];
+
+const total = Math.ceil(window.innerWidth / 4.5);
+let output = '';
+
+for (let i = 0; i < total; i++) {
+  const isBlade = Math.random() > 0.34;
+  if (isBlade) {
+    const blade = bladeOptions[Math.floor(Math.random() * bladeOptions.length)];
+    output += `<span class="blade" data-i="${i}">${blade}</span>`;
+  } else {
+    const flat = flatOptions[Math.floor(Math.random() * flatOptions.length)];
+    output += `<span class="flat">${flat}</span>`;
+  }
+}
+
+groundLine.innerHTML = output;
+
+const groundLine2 = document.querySelector('.ground-line-2');
+const unit2 = '...,.,....,...,,....,..,.,...,,..,....,';
+const repeats2 = Math.ceil(window.innerWidth / (unit2.length * 5.5)) + 3;
+groundLine2.textContent = unit2.repeat(repeats2);
+
+// Preserve the gentle desync structure for falling bars.
+document.querySelectorAll('.opaque.state-falling').forEach(bar => {
+  const depthRoll = Math.random();
+  const depth = depthRoll < 0.4 ? 'depth-far' : depthRoll < 0.75 ? 'depth-mid' : 'depth-near';
+  bar.classList.add(depth);
+
+  const scale = depth === 'depth-far' ? 0.4 : depth === 'depth-mid' ? 0.7 : 1.0;
+
+  const durY = (9 + Math.random() * 7).toFixed(2);
+  const durX = (durY * 1.3 + Math.random() * 3).toFixed(2);
+  const delY = -(Math.random() * 10).toFixed(2);
+  const delX = -(Math.random() * 10).toFixed(2);
+
+});
+
+
+// Glitter desync — staggered phase per bar-xs falling bar
+document.querySelectorAll('.bar-xs.opaque.state-falling').forEach(bar => {
+  const duration = 3000 + Math.random() * 2500; // 2.2s – 4s
+  const delay = Math.random() * duration;
+  bar.style.animationDuration = `${duration}ms`;
+  bar.style.animationDelay = `-${delay}ms`;
+});
+
+let opaqueBars = Array.from(document.querySelectorAll('.opaque'));
+
+function syncOpaqueBars() {
+  opaqueBars = Array.from(document.querySelectorAll('.opaque')).concat(
+    Array.from(document.querySelectorAll('.word-bar'))
+  );
+}
+
+const scanFrames = [
+  { x: 0.0, y: 0.0, r: 0.0 },
+  { x: 0.35, y: -0.25, r: 0.06 },
+  { x: -0.22, y: 0.18, r: -0.05 },
+  { x: 0.14, y: 0.08, r: 0.03 },
+  { x: -0.12, y: -0.1, r: -0.04 }
+];
+
+let scanFrame = 0;
+
+function jitterBars() {
+  scanFrame = (scanFrame + 1) % scanFrames.length;
+
+  opaqueBars.forEach((bar, i) => {
+    const f = scanFrames[(scanFrame + i) % scanFrames.length];
+    const isFalling = bar.classList.contains('state-falling');
+    const strength = isFalling ? 0.6 : 1.0;
+
+    const x = f.x * strength;
+    const y = f.y * strength;
+    const r = f.r * strength;
+
+    bar.style.setProperty('--x', `${x}px`);
+    bar.style.setProperty('--y', `${y}px`);
+    bar.style.setProperty('--r', `${r}deg`);
+
+    const px = 50 + x * 2.25 + (isFalling ? 0.2 : 0);
+    const py = 50 + y * 2.25 + (isFalling ? -0.1 : 0);
+    bar.style.backgroundPosition = `${px}% ${py}%`;
+
+    if (isFalling && !bar.classList.contains('bar-xs')) {
+      bar.style.opacity = (0.48 + Math.random() * 0.08).toFixed(3);
+    } else if (!isFalling) {
+      bar.style.opacity = '1';
+    }
+  });
+}
+
+setInterval(jitterBars, 110);
+jitterBars();
+</script>
+
+<div class="words-layer" aria-hidden="true"></div>
+
+<script>
+const WORD_LAYER = document.querySelector('.words-layer');
+const IL_HOLD_MS = 130;
+const EN_HOLD_MS = 950;
+const LINE_GAP_MS = 180;
+const SET_GAP_MS = 1400;
+const FINAL_SET_HOLD_MS = 1900;
+const CHUNK_MIN_MS = 42;
+const CHUNK_MAX_MS = 112;
+const ERASE_MIN_MS = 34;
+const ERASE_MAX_MS = 96;
+
+const MESSAGE_SETS = [
+  {
+    id: 'set-1',
+    title: 'Daily Check-in',
+    repeatCount: 12,
+    phrases: [
+      { il: 'Nangan kan?', en: 'Did you eat?',
+        placements: [
+          { top:  4.5, left: 47.5 },
+          { top: 11.1, left: 32.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 22.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 52.9, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      },
+      { il: 'Nakaturog kan?', en: 'Did you sleep?',
+        placements: [
+          { top:  6.7, left: 44.0 },
+          { top: 13.4, left: 21.5 },
+          { top: 20.0, left: 64.0 },
+          { top: 28.6, left: 32.0 },
+          { top: 37.5, left: 52.0 },
+          { top: 42.2, left: 72.0 },
+          { top: 55.0, left: 36.0 },
+          { top: 64.0, left: 64.0 },
+          { top: 66.2, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.0, left: 54.0 },
+          { top: 90.3, left: 64.0 }
+        ]
+      },
+      { il: 'Inandadoam tay ridaw?', en: 'Did you lock the door?',
+        placements: [
+          { top:  4.5, left: 45.0 },
+          { top: 11.1, left: 22.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 32.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 52.9, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      },
+      { il: 'Naawatam tay mensahemi?', en: 'Did you get our message?',
+        placements: [
+          { top:  4.5, left: 47.5 },
+          { top: 11.1, left: 32.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 32.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 52.9, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      },
+      { il: 'Linaglagipmo kamin sadiay?', en: 'Do you think about us over there?',
+        placements: [
+          { top:  6.7, left: 42.0 },
+          { top: 13.4, left: 21.3 },
+          { top: 19.8, left: 54.0 },
+          { top: 28.6, left: 34.0 },
+          { top: 37.4, left: 51.0 },
+          { top: 42.0, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 63.8, left: 64.0 },
+          { top: 66.0, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.3, left: 54.0 },
+          { top: 90.3, left: 50.0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'set-2',
+    title: 'Spiritual & Wishes',
+    repeatCount: 12,
+    phrases: [
+      { il: 'Nagkararag kan?', en: 'Did you pray?',
+        placements: [
+          { top:  4.5, left: 47.5 },
+          { top: 11.1, left: 32.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 22.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 55.1, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      },
+      { il: 'Inkararagannak?', en: 'Did you pray for me?',
+        placements: [
+          { top:  6.7, left: 42.0 },
+          { top: 13.4, left: 21.3 },
+          { top: 19.8, left: 54.0 },
+          { top: 28.6, left: 34.0 },
+          { top: 37.4, left: 51.0 },
+          { top: 42.0, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 63.8, left: 64.0 },
+          { top: 66.0, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.3, left: 54.0 },
+          { top: 90.3, left: 50.0 }
+        ]
+      },
+      { il: 'Inkararagannakami?', en: 'Did you pray for us?',
+        placements: [
+          { top:  6.7, left: 42.0 },
+          { top: 13.4, left: 21.3 },
+          { top: 19.8, left: 54.0 },
+          { top: 28.6, left: 34.0 },
+          { top: 37.4, left: 51.0 },
+          { top: 42.0, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 63.8, left: 64.0 },
+          { top: 66.0, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.3, left: 54.0 },
+          { top: 90.3, left: 50.0 }
+        ]
+      },
+      { il: 'Nangikararagka kadi ti nasalun-at a bagi?', en: 'Did you pray for good health?',
+        placements: [
+          { top:  4.5, left: 47.5 },
+          { top: 11.1, left: 32.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 35.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 52.9, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      },
+      { il: 'Inkararagmo ti mangabak iti loterya?', en: 'Did you pray to win the lottery?',
+        placements: [
+          { top:  6.7, left: 42.0 },
+          { top: 13.4, left: 21.3 },
+          { top: 19.8, left: 54.0 },
+          { top: 28.6, left: 34.0 },
+          { top: 37.4, left: 51.0 },
+          { top: 42.0, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 63.8, left: 64.0 },
+          { top: 66.0, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.3, left: 54.0 },
+          { top: 90.3, left: 50.0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'set-3',
+    title: 'Distance & Safety',
+    repeatCount: 12,
+    phrases: [
+      { il: 'Kumustaka dita?', en: 'How are you over there?',
+        placements: [
+          { top:  4.5, left: 47.5 },
+          { top: 11.1, left: 32.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 40.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 52.9, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      },
+      { il: 'Sinalmetka kadi dita?', en: 'Are you safe?',
+        placements: [
+          { top:  6.7, left: 42.0 },
+          { top: 13.4, left: 21.3 },
+          { top: 19.8, left: 54.0 },
+          { top: 28.6, left: 34.0 },
+          { top: 37.4, left: 51.0 },
+          { top: 42.0, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 63.8, left: 64.0 },
+          { top: 66.0, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.3, left: 54.0 },
+          { top: 90.3, left: 50.0 }
+        ]
+      },
+      { il: 'Nalam-ek kadi dita?', en: 'Is it cold over there?',
+        placements: [
+          { top:  6.7, left: 42.0 },
+          { top: 13.4, left: 21.3 },
+          { top: 19.8, left: 54.0 },
+          { top: 28.6, left: 34.0 },
+          { top: 37.4, left: 51.0 },
+          { top: 42.0, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 63.8, left: 64.0 },
+          { top: 66.0, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.3, left: 54.0 },
+          { top: 90.3, left: 50.0 }
+        ]
+      },
+      { il: 'Kaano ti pulingmo?', en: 'When are you coming back?',
+        placements: [
+          { top:  6.7, left: 47.5 },
+          { top: 13.4, left: 21.5 },
+          { top: 20.0, left: 64.0 },
+          { top: 28.6, left: 32.0 },
+          { top: 37.5, left: 52.0 },
+          { top: 42.2, left: 72.0 },
+          { top: 55.1, left: 36.0 },
+          { top: 64.0, left: 64.0 },
+          { top: 66.2, left: 40.0 },
+          { top: 72.7, left: 32.0 },
+          { top: 79.0, left: 54.0 },
+          { top: 90.3, left: 64.0 }
+        ]
+      },
+      { il: 'Kaano ti pumanawam manen?', en: 'When are you leaving again?',
+        placements: [
+          { top:  4.5, left: 47.5 },
+          { top: 11.1, left: 32.0 },
+          { top: 20.0, left: 64.0 },
+          { top: 26.5, left: 45.8 },
+          { top: 33.1, left: 22.0 },
+          { top: 41.8, left: 58.0 },
+          { top: 52.9, left: 70.0 },
+          { top: 55.1, left: 34.5 },
+          { top: 63.8, left: 28.0 },
+          { top: 70.5, left: 42.0 },
+          { top: 79.2, left: 60.0 },
+          { top: 85.8, left: 54.0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'set-4',
+    title: 'Heritage & Reflection',
+    repeatCount: 1,
+    postSetHoldMs: FINAL_SET_HOLD_MS,
+    phrases: [
+      { il: 'Pinanaganandaka iti nagan a mabalin da a sawen.', en: 'We named you something they could pronounce.' },
+      { il: 'Tapno nalaka laeng a sawen da.', en: 'So it will be easy for them to say.' },
+      { il: 'Kinunada a sagut daytoy a lengguahe.', en: 'They said this language is a gift.' }
+    ],
+    placements: [
+      { top: 4.5, left: 46.5 },
+      { top: 4.5, left: 47.5 },
+      { top: 4.5, left: 46.5 }
+    ]
+  }
+];
+
+let setLoopRunId = 0;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function mulberry32(seed) {
+  let t = seed >>> 0;
+  return function rng() {
+    t += 0x6D2B79F5;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function chunkStops(text) {
+  const trimmed = text.trim();
+  if (!trimmed) return [1];
+
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (words.length > 1) {
+    const stops = [];
+    let count = 0;
+    words.forEach((word, index) => {
+      count += word.length;
+      stops.push(count);
+      if (index < words.length - 1) count += 1;
+    });
+    return stops.length ? stops : [Math.max(trimmed.length, 1)];
+  }
+
+  const length = trimmed.length;
+  if (length <= 6) return [length];
+
+  const chunkCount = Math.min(5, Math.max(3, Math.ceil(length / 5)));
+  const stops = [];
+  let cursor = 0;
+
+  for (let i = 0; i < chunkCount; i += 1) {
+    const remaining = length - cursor;
+    const chunksLeft = chunkCount - i;
+    const minNext = 1;
+    const maxNext = remaining - (chunksLeft - 1);
+    let step = Math.ceil(remaining / chunksLeft);
+
+    if (i === chunkCount - 1) {
+      step = remaining;
+    } else {
+      const drift = Math.round((Math.random() - 0.5) * 2);
+      step = Math.max(minNext, Math.min(maxNext, step + drift));
+    }
+
+    cursor += step;
+    stops.push(cursor);
+  }
+
+  stops[stops.length - 1] = length;
+  return stops;
+}
+
+function measureFullWidth(el) {
+  if (!el.dataset.fullWidth) {
+    const prevWidth = el.style.width;
+    const prevOpacity = el.style.opacity;
+    const prevClip = el.style.clipPath;
+
+    el.style.width = 'auto';
+    el.style.opacity = '0';
+    el.style.clipPath = 'none';
+
+    const measured = Math.ceil(el.getBoundingClientRect().width) || el.scrollWidth || 1;
+    el.dataset.fullWidth = String(measured);
+
+    el.style.width = prevWidth;
+    el.style.opacity = prevOpacity;
+    el.style.clipPath = prevClip;
+  }
+
+  return Number(el.dataset.fullWidth) || 1;
+}
+
+function setBarText(el, text) {
+  el.textContent = text;
+  delete el.dataset.fullWidth;
+}
+
+function resetBar(el) {
+  el.classList.remove('is-active', 'revealed', 'source-hidden');
+  el.style.transition = 'none';
+  el.style.clipPath = 'inset(0 100% 0 0)';
+  el.style.opacity = '0';
+  el.style.width = '0px';
+  el.style.backgroundColor = '';
+  el.style.backgroundImage = '';
+  el.style.boxShadow = '';
+  el.style.filter = '';
+  el.style.webkitTextStroke = '';
+  el.style.setProperty('--tx', '0px');
+}
+
+function createPhrasePositions(area, seed, count) {
+  const rng = mulberry32(seed);
+  const positions = [];
+
+  if (count === 1) {
+    positions.push({
+      left: area.left,
+      top: area.top,
+      rotation: (rng() - 0.5) * 2.4
+    });
+    return positions;
+  }
+
+  const cols = 4;
+  const rows = 3;
+  const cellWidth = area.width / cols;
+  const cellHeight = area.height / rows;
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const centerLeft = area.left + (col + 0.5) * cellWidth;
+      const centerTop = area.top + (row + 0.5) * cellHeight;
+      const jitterX = (rng() - 0.5) * cellWidth * 0.16;
+      const jitterY = (rng() - 0.5) * cellHeight * 0.20;
+      const rotation = (rng() - 0.5) * 8;
+
+      positions.push({
+        left: centerLeft + jitterX,
+        top: centerTop + jitterY,
+        rotation
+      });
+    }
+  }
+
+  return positions;
+}
+
+function buildSetBars(setDef) {
+  const bars = [];
+  const count = setDef.repeatCount;
+
+  setDef.phrases.forEach((phrase, phraseIndex) => {
+    let positions;
+    if (phrase.placements) {
+      positions = phrase.placements.map(p => ({
+        left:     p.left,
+        top:      p.top,
+        rotation: 0
+      }));
+    } else {
+      const area = setDef.placements[phraseIndex];
+      positions = createPhrasePositions(area, 0, count);
+    }
+
+    for (let instance = 0; instance < count; instance += 1) {
+      const pos = positions[instance % positions.length];
+      const el = document.createElement('div');
+      el.className = 'word-bar';
+      el.style.setProperty('--tx', '0px');
+      el.dataset.setId = setDef.id;
+      el.dataset.phraseIndex = String(phraseIndex);
+      el.dataset.instanceIndex = String(instance);
+      el.dataset.il = phrase.il;
+      el.dataset.en = phrase.en;
+      setBarText(el, phrase.il);
+      el.style.top = `${pos.top}vh`;
+      el.style.left = `${pos.left}vw`;
+      el.style.setProperty('--r', `${pos.rotation.toFixed(2)}deg`);
+      WORD_LAYER.appendChild(el);
+      bars.push(el);
+    }
+  });
+
+  return bars;
+}
+
+function renderSet(setDef) {
+  WORD_LAYER.innerHTML = '';
+  const bars = buildSetBars(setDef);
+  syncOpaqueBars();
+  bars.forEach(measureFullWidth);
+  bars.forEach(resetBar);
+  return bars;
+}
+
+async function revealChunked(el) {
+  const fullWidth = measureFullWidth(el);
+  const text = el.textContent.trim();
+  const totalChars = Math.max(text.length, 1);
+  const stops = chunkStops(text);
+
+  el.classList.remove('source-hidden');
+  el.classList.add('is-active', 'revealed');
+  el.style.transition = 'none';
+  el.style.opacity = '1';
+  el.style.clipPath = 'inset(0 100% 0 0)';
+  el.style.width = '0px';
+  void el.offsetWidth;
+
+  for (let i = 0; i < stops.length; i += 1) {
+    const chars = stops[i];
+    const targetWidth = Math.max(1, Math.round((fullWidth * chars) / totalChars));
+    el.style.width = `${targetWidth}px`;
+    await sleep(CHUNK_MIN_MS + Math.random() * (CHUNK_MAX_MS - CHUNK_MIN_MS));
+    if (i < stops.length - 1 && Math.random() > 0.72) {
+      await sleep(60 + Math.random() * 80);
+    }
+  }
+
+  el.style.width = `${fullWidth}px`;
+  el.style.opacity = '1';
+  el.classList.remove('is-active');
+}
+
+async function eraseChunked(el) {
+  const fullWidth = measureFullWidth(el);
+  const text = el.textContent.trim();
+  const totalChars = Math.max(text.length, 1);
+  const stops = chunkStops(text).reverse();
+
+  el.classList.add('is-active');
+  el.style.transition = 'none';
+  el.style.opacity = '1';
+  el.style.clipPath = 'inset(0 0 0 0)';
+
+  for (let i = 0; i < stops.length; i += 1) {
+    const chars = stops[i];
+    const targetWidth = Math.max(1, Math.round((fullWidth * chars) / totalChars));
+    el.style.width = `${targetWidth}px`;
+    await sleep(ERASE_MIN_MS + Math.random() * (ERASE_MAX_MS - ERASE_MIN_MS));
+    if (i < stops.length - 1 && Math.random() > 0.8) {
+      await sleep(45 + Math.random() * 70);
+    }
+  }
+
+  el.style.width = '0px';
+  el.classList.remove('is-active', 'revealed');
+  el.classList.add('source-hidden');
+}
+
+async function playPhrase(phraseBars, phrase) {
+  phraseBars.forEach(el => {
+    setBarText(el, phrase.il);
+    resetBar(el);
+  });
+
+  await Promise.all(phraseBars.map(revealChunked));
+  await sleep(IL_HOLD_MS);
+  await Promise.all(phraseBars.map(eraseChunked));
+  await sleep(90);
+
+  phraseBars.forEach(el => {
+    setBarText(el, phrase.en);
+    resetBar(el);
+  });
+
+  await Promise.all(phraseBars.map(revealChunked));
+  await sleep(EN_HOLD_MS);
+  await Promise.all(phraseBars.map(eraseChunked));
+}
+
+async function playSet(setDef) {
+  const bars = renderSet(setDef);
+
+  for (let i = 0; i < setDef.phrases.length; i += 1) {
+    const phrase = setDef.phrases[i];
+    const phraseBars = bars.filter(el => el.dataset.phraseIndex === String(i));
+    if (!phraseBars.length) continue;
+    await playPhrase(phraseBars, phrase);
+    await sleep(LINE_GAP_MS);
+  }
+
+  await sleep(setDef.postSetHoldMs || SET_GAP_MS);
+  WORD_LAYER.innerHTML = '';
+  syncOpaqueBars();
+}
+
+async function loopSets() {
+  const runId = ++setLoopRunId;
+
+  while (runId === setLoopRunId) {
+    for (const setDef of MESSAGE_SETS) {
+      if (runId !== setLoopRunId) return;
+      await playSet(setDef);
+      if (runId !== setLoopRunId) return;
+    }
+  }
+}
+
+syncOpaqueBars();
+loopSets();
+</script>
+<div id="crt-bloom"></div>
+</body>
+</html>

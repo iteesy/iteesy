@@ -125,7 +125,7 @@ function addLine() {
   } else if (lineCount === 4) {
     createPopup("Come interact with her work in an immersive setting at <a href='https://grayarea.org/event/local-memory-soft-systems/' target='_blank'>./local_memory: soft systems</a> on April 17-19, 2026 at Gray Area, SF.", lineCount);
   } else if (lineCount === 5) {
-    createPopup("She is always in the middle of learning something she can't quite explain yet. Just wait.", lineCount);
+    createPopup("She is hoping you're on a big screen as she can't remember if this is very responsive.", lineCount);
   } else if (lineCount === 6) {
     createPopup("She is hoping you're on a big screen as she can't remember if this is very responsive.", lineCount);
   } else if (lineCount === 7) {
